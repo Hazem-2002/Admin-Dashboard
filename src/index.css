@@ -1,3 +1,25 @@
 @import "tailwindcss";
 
+@layer base {
+  input::-ms-reveal,
+  input::-ms-clear {
+    display: none;
+  }
+}
+
 @custom-variant dark (&:where(.dark, .dark *));
+
+/* Chrome, Edge, Safari */
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Firefox */
+.hide-scrollbar {
+  scrollbar-width: none;
+}
+
+/* IE & Edge القديم */
+.hide-scrollbar {
+  -ms-overflow-style: none;
+}

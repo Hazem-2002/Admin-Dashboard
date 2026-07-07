@@ -5,7 +5,7 @@ const Layout = () => {
   return (
     <main className="min-h-screen bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100">
       {/* Sidebar */}
-      <div className="hidden lg:block fixed inset-y-0 left-0 z-30 w-72 bg-slate-100/50 dark:bg-transparent shadow-xl">
+      <div className="hidden lg:block fixed inset-y-0 left-0 z-30 w-72 border-r border-slate-600/50 bg-slate-100/50 dark:bg-transparent shadow-xl">
         <aside className="flex h-full p-6 gap-6 flex-col">
           <div>
             <p className="text-xs uppercase font-bold tracking-[0.25em] text-cyan-400">
