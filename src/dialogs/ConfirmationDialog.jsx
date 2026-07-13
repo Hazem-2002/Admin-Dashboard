@@ -16,7 +16,7 @@ const ConfirmationDialog = ({
   message,
   confirmText = "Confirm",
   cancelText = "Cancel",
-  confirmButtonColor = "!bg-blue-500",
+  confirmButtonColor = "!bg-success",
 }) => {
   const [loading, setLoading] = useState(false);
 
@@ -40,17 +40,17 @@ const ConfirmationDialog = ({
 
         paper: {
           className:
-            "!bg-gray-200 dark:!bg-slate-800 !border !border-slate-700/90 !rounded-2xl !max-h-[80vh] !w-screen sm:!w-[35vw]",
+            "!bg-bg-card !border !border-border !rounded-3xl !max-h-[80vh] !w-screen sm:!w-[35vw]",
         },
       }}
       disableScrollLock
     >
-      <DialogTitle className="!text-black dark:!text-white/95 !pb-2 !font-semibold">
+      <DialogTitle className="!text-text-primary !pb-2 !font-semibold">
         {title}
       </DialogTitle>
 
       <DialogContent>
-        <DialogContentText className="!text-gray-900 dark:!text-white/70 !text-sm">
+        <DialogContentText className="!text-text-primary/70 !text-sm">
           {message}
         </DialogContentText>
       </DialogContent>
@@ -60,7 +60,7 @@ const ConfirmationDialog = ({
           onClick={onClose}
           disabled={loading}
           variant="text"
-          className="!text-black dark:!text-white/80 hover:!bg-transparent"
+          className="!text-black dark:!text-white/80 hover:!bg-transparent !rounded-md"
         >
           {cancelText}
         </Button>

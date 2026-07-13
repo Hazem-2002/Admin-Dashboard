@@ -1,12 +1,10 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  getAllUsers,
-  deleteUser,
-  editUser,
-  changeUserRole,
-} from "../../features/users/usersSlice";
-import ProductsPageHeader from "./Components/ProductsPageHeader";
+import { getAllUsersThunk } from "../../features/users/Thunks/GetAllUsersThunk";
+import { deleteUserThunk } from "../../features/users/Thunks/DeleteUserThunk";
+import { editUserThunk } from "../../features/users/Thunks/EditUserThunk";
+import { changeUserRoleThunk } from "../../features/users/Thunks/ChangeUserRoleThunk";
+import UsersPageHeader from "./Components/UsersPageHeader";
 import { useState, useEffect, useRef } from "react";
 import { Button, Avatar, Tooltip } from "@mui/material";
 import ConfirmationDialog from "../../dialogs/ConfirmationDialog";
@@ -19,14 +17,21 @@ import Toast from "../../toast/Toast";
 const UsersPage = () => {
   const users = useSelector((store) => store.users);
   const usersDispatch = useDispatch();
-  const [openConfirmationDialog, setOpenConfirmationDialog] = useState(false);
-  const [openEditUserDialog, setOpenEditUserDialog] = useState(false);
-  const [openToast, setOpenToast] = useState(false);
   const [inputSearch, setInputSearch] = useState("");
+
+  // Toast Control
+  const [openToast, setOpenToast] = useState(false);
+
+  // Toast Data
   const [toastData, setToastData] = useState({
     message: "User added successfully!",
     severity: "success",
   });
+
+  // Edit User Dialog Control
+  const [openEditUserDialog, setOpenEditUserDialog] = useState(false);
+
+  // Confirmation Dialog Data
   const [confirmationDialogData, setConfirmationDialogData] = useState({
     title: "",
     message: "",
@@ -34,19 +39,25 @@ const UsersPage = () => {
     confirmButtonColor: "",
     action: null,
   });
+
+  // Confirmation Dialog Control
+  const [openConfirmationDialog, setOpenConfirmationDialog] = useState(false);
+
+  // Edit User Dialog Data
   const [editUserDialogData, setEditUserDialogData] = useState({
     title: "",
     values: { username: "", phone: "", avatar: "" },
     onConfirm: null,
   });
 
+  // Cell Height in Table of Users
   const [maxHeight, setMaxHeight] = useState(0);
   const td = useRef(null);
   const th = useRef(null);
 
   // Fetch users from API and set state on mount
   useEffect(() => {
-    usersDispatch(getAllUsers());
+    usersDispatch(getAllUsersThunk());
     /* eslint-disable react-hooks/exhaustive-deps */
   }, []);
 
@@ -71,10 +82,7 @@ const UsersPage = () => {
 
       onConfirm: async (formData) => {
         try {
-          await usersDispatch(editUser({ id, formData })).unwrap();
-
-          await usersDispatch(getAllUsers());
-
+          await usersDispatch(editUserThunk({ id, formData })).unwrap();
           setToastData({
             message: "User updated successfully!",
             severity: "success",
@@ -100,14 +108,11 @@ const UsersPage = () => {
       title: "Delete User",
       message: "Are you sure you want to delete this user permanently?",
       confirmText: "Delete",
-      confirmButtonColor: "!bg-red-600 hover:!bg-red-700",
+      confirmButtonColor: "!bg-danger hover:!bg-danger/80",
 
       action: async () => {
         try {
-          await usersDispatch(deleteUser(id)).unwrap();
-
-          await usersDispatch(getAllUsers());
-
+          await usersDispatch(deleteUserThunk(id)).unwrap();
           setToastData({
             message: "User deleted successfully!",
             severity: "success",
@@ -133,18 +138,16 @@ const UsersPage = () => {
       title: "Change User Role",
       message: `Are you sure you want to change this user's role to ${role}?`,
       confirmText: "Change",
-      confirmButtonColor: "!bg-green-600 hover:!bg-green-700",
+      confirmButtonColor: "!bg-success hover:!bg-success/80",
 
       action: async () => {
         try {
           await usersDispatch(
-            changeUserRole({
+            changeUserRoleThunk({
               userId: id,
               role,
             }),
           ).unwrap();
-
-          await usersDispatch(getAllUsers());
 
           setToastData({
             message: "User role updated successfully!",
@@ -166,18 +169,20 @@ const UsersPage = () => {
   };
 
   const filteredUsers = users.users?.filter((user) =>
-    user.username.toLowerCase().includes(inputSearch.toLowerCase()),
+    user?.username?.toLowerCase().includes(inputSearch.toLowerCase()),
   );
+  
   return (
     <div className="flex flex-col gap-8 p-6">
-      <ProductsPageHeader
+      <UsersPageHeader
         inputSearch={inputSearch}
         handleSearch={(val) => setInputSearch(val)}
       />
 
+      {/* Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-4">
         {/* Total Users */}
-        <div className="flex justify-between items-center rounded-3xl p-6 border border-slate-200 bg-slate-100/30 dark:bg-slate-900 shadow-md hover:shadow-lg shadow-slate-900/7 hover:shadow-slate-500/15 dark:shadow-slate-700/40 dark:hover:shadow-slate-600/50 dark:border-slate-800 hover:bg-slate-200/35 dark:hover:bg-slate-800/70 hover:-translate-y-1 transition duration-200 will-change-transform">
+        <div className="flex justify-between items-center rounded-3xl p-6 border border-border bg-bg-card/75 dark:bg-bg-card shadow hover:shadow-sm hover:bg-info-bg/10 hover:-translate-y-1 transition duration-200 will-change-transform">
           <div className="flex flex-col gap-2">
             <h3 className="capitalize font-bold text-sm text-slate-600/80 dark:text-white/80">
               Total Users
@@ -208,7 +213,7 @@ const UsersPage = () => {
         </div>
 
         {/* Admin */}
-        <div className="flex justify-between items-center rounded-3xl p-6 border border-slate-200 bg-slate-100/30 dark:bg-slate-900 shadow-md hover:shadow-lg shadow-slate-900/7 hover:shadow-slate-500/15 dark:shadow-slate-700/40 dark:hover:shadow-slate-600/50 dark:border-slate-800 hover:bg-slate-200/35 dark:hover:bg-slate-800/70 hover:-translate-y-1 transition duration-200 will-change-transform">
+        <div className="flex justify-between items-center rounded-3xl p-6 border border-border bg-bg-card/75 dark:bg-bg-card shadow hover:shadow-sm hover:bg-info-bg/10 hover:-translate-y-1 transition duration-200 will-change-transform">
           <div className="flex flex-col gap-2">
             <h3 className="capitalize font-bold text-sm text-slate-600/80 dark:text-white/80">
               Admin
@@ -236,7 +241,7 @@ const UsersPage = () => {
         </div>
 
         {/* Customers */}
-        <div className="flex justify-between items-center rounded-3xl p-6 border border-slate-200 bg-slate-100/30 dark:bg-slate-900 shadow-md hover:shadow-lg shadow-slate-900/7 hover:shadow-slate-500/15 dark:shadow-slate-700/40 dark:hover:shadow-slate-600/50 dark:border-slate-800 hover:bg-slate-200/35 dark:hover:bg-slate-800/70 hover:-translate-y-1 transition duration-200 will-change-transform">
+        <div className="flex justify-between items-center rounded-3xl p-6 border border-border bg-bg-card/75 dark:bg-bg-card shadow hover:shadow-sm hover:bg-info-bg/10 hover:-translate-y-1 transition duration-200 will-change-transform">
           <div className="flex flex-col gap-2">
             <h3 className="capitalize font-bold text-sm text-slate-600/80 dark:text-white/80">
               Customers
@@ -267,7 +272,7 @@ const UsersPage = () => {
         </div>
 
         {/* Verified */}
-        <div className="flex justify-between items-center rounded-3xl p-6 border border-slate-200 bg-slate-100/30 dark:bg-slate-900 shadow-md hover:shadow-lg shadow-slate-900/7 hover:shadow-slate-500/15 dark:shadow-slate-700/40 dark:hover:shadow-slate-600/50 dark:border-slate-800 hover:bg-slate-200/35 dark:hover:bg-slate-800/70 hover:-translate-y-1 transition duration-200 will-change-transform">
+        <div className="flex justify-between items-center rounded-3xl p-6 border border-border bg-bg-card/75 dark:bg-bg-card shadow hover:shadow-sm hover:bg-info-bg/10 hover:-translate-y-1 transition duration-200 will-change-transform">
           <div className="flex flex-col gap-2">
             <h3 className="capitalize font-bold text-sm text-slate-600/80 dark:text-white/80">
               Verified
@@ -299,12 +304,12 @@ const UsersPage = () => {
 
       {/* Users Table */}
       <div
-        className="overflow-auto rounded-2xl border border-slate-400/30 shadow-lg hide-scrollbar dark:border-slate-700"
+        className="overflow-auto rounded-2xl border border-border shadow-lg hide-scrollbar dark:border-secondary/30"
         style={{ maxHeight: `${maxHeight}px` }}
       >
         <table className="min-w-[620px] sm:min-w-full border-separate border-spacing-0">
-          <thead className="sticky top-0 z-10 bg-slate-200 dark:bg-slate-800 dark:text-slate-200 text-slate-800/60">
-            <tr ref={th}>
+          <thead className="sticky top-0 z-10 bg-bg-main text-text-primary/85">
+            <tr ref={th} className="bg-secondary/13 dark:bg-secondary/20">
               <th className="py-4 px-6 text-left">User</th>
               <th className="py-4 px-6 text-center">Role</th>
               <th className="py-4 px-6 text-center">Verified</th>
@@ -312,18 +317,18 @@ const UsersPage = () => {
             </tr>
           </thead>
 
-          <tbody className="bg-slate-200/40 dark:bg-slate-900">
+          <tbody className="bg-secondary/1 dark:bg-bg-card">
             {filteredUsers.length > 0 ? (
               filteredUsers.map((user, index, array) => (
                 <tr
                   ref={index === 0 ? td : null}
                   key={user._id}
-                  className="hover:bg-slate-200/35 dark:hover:bg-slate-300/30 dark:hover:bg-slate-800/30 transition-colors"
+                  className="hover:bg-secondary/4 transition"
                 >
                   <td
                     className={`py-4 px-6 ${
                       index === array.length - 1 ? "" : "border-b"
-                    } border-slate-400/20 dark:border-slate-700/70`}
+                    } border-secondary/15 dark:border-secondary/20`}
                   >
                     <div className="flex items-center gap-4">
                       <Avatar alt={user.username} src={user.avatar}>
@@ -331,7 +336,7 @@ const UsersPage = () => {
                       </Avatar>
                       <div className="flex flex-col gap-1">
                         <h3 className="capitalize">{user.username}</h3>
-                        <p className="text-sm text-slate-400/80">
+                        <p className="text-sm text-text-muted/75">
                           {user.email}
                         </p>
                       </div>
@@ -341,7 +346,7 @@ const UsersPage = () => {
                   <td
                     className={`py-4 px-6 text-center ${
                       index === array.length - 1 ? "" : "border-b"
-                    } border-slate-400/20 dark:border-slate-700/70`}
+                    } border-secondary/15 dark:border-secondary/20`}
                   >
                     <span
                       className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[11px] font-semibold tracking-wide ring-1 transition-all duration-200 ${
@@ -363,7 +368,7 @@ const UsersPage = () => {
                       user.isVerified ? "text-green-500" : "text-red-500"
                     } ${
                       index === array.length - 1 ? "" : "border-b"
-                    } border-slate-400/20 dark:border-slate-700/70`}
+                    } border-secondary/15 dark:border-secondary/20`}
                   >
                     {user.isVerified ? "✅ Verified" : "❌ Not Verified"}
                   </td>
@@ -371,7 +376,7 @@ const UsersPage = () => {
                   <td
                     className={`py-4 px-6 text-center ${
                       index === array.length - 1 ? "" : "border-b"
-                    } border-slate-400/20 dark:border-slate-700/70`}
+                    } border-secondary/15 dark:border-secondary/20`}
                   >
                     <div className="flex justify-center items-center gap-3">
                       {/* Edit */}

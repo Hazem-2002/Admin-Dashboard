@@ -1,23 +1,22 @@
 import React from "react";
 import { useEffect, useState } from "react";
+import axios from "axios";
 
 const DashboardPage = () => {
   const [data, setData] = useState({});
 
   useEffect(() => {
     const fetchData = async () => {
-      const res = await fetch(
+      const products = await axios.get(
         "https://e-commerce-api-3wara.vercel.app/orders/admin/dashboard",
         {
-          method: "GET",
           headers: {
-            Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhNDNjYmQ0MzMwYTZjN2ZkYWZlOTc1ZiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc4MzQ1MzgxNCwiZXhwIjoxNzgzODg1ODE0fQ.sEKU3pOYCPuKG06CUT4A2fegt3GzeugQ711DgGL7XEo`,
+            Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhN…Dk1fQ.8c5Yg22PLOm8ljL40qptA9vavT7_1WJGLIIamjMriac`,
           },
         },
       );
-      const products = await res.json();
-      console.log(products);
-      setData(products);
+      console.log(products.data);
+      setData(products.data);
     };
     fetchData();
   }, []);

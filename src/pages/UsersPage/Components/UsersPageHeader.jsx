@@ -1,7 +1,7 @@
 import React from "react";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { getAllUsers, addUser } from "../../../features/users/usersSlice";
+import { addUserThunk } from "../../../features/users/Thunks/AddUserThunk";
 import {
   IconButton,
   Button,
@@ -19,40 +19,39 @@ import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import CircularProgress from "@mui/material/CircularProgress";
 
 const ProductsPageHeader = ({ inputSearch, handleSearch }) => {
-  const usersDispatch = useDispatch();
-  const [openCollapse, setOpenCollapse] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
-  const [newUserData, setNewUserData] = useState({
+  const initialNewUserData = {
     username: "",
     email: "",
     password: "",
     phone: "",
-  });
-  const [errors, setErrors] = useState({
-    username: "",
-    email: "",
-    password: "",
-    phone: "",
-  });
+  };
 
+  const initialErrors = { username: "", email: "", password: "", phone: "" };
+  const usersDispatch = useDispatch();
+  const [loading, setLoading] = useState(false);
+  const [openCollapse, setOpenCollapse] = useState(false);
+
+  // Control Password Visibility
+  const [showPassword, setShowPassword] = useState(false);
+
+  // New User Data
+  const [newUserData, setNewUserData] = useState(initialNewUserData);
+
+  // Fields Errors
+  const [errors, setErrors] = useState(initialErrors);
+
+  // Toast Control
   const [openToast, setOpenToast] = useState(false);
 
+  // Toast Data
   const [toastData, setToastData] = useState({
     message: "User added successfully!",
     severity: "success",
   });
 
-  const [loading, setLoading] = useState(false);
-
   const handleReset = () => {
-    setNewUserData({
-      username: "",
-      email: "",
-      password: "",
-      phone: "",
-    });
-
-    setErrors({ username: "", email: "", password: "", phone: "" });
+    setNewUserData(initialNewUserData);
+    setErrors(initialErrors);
   };
 
   const regex = {
@@ -94,8 +93,7 @@ const ProductsPageHeader = ({ inputSearch, handleSearch }) => {
     setLoading(true);
 
     try {
-      await usersDispatch(addUser(newUserData)).unwrap();
-      await usersDispatch(getAllUsers());
+      await usersDispatch(addUserThunk(newUserData)).unwrap();
 
       setToastData({
         message: "User added successfully!",
@@ -116,12 +114,12 @@ const ProductsPageHeader = ({ inputSearch, handleSearch }) => {
   return (
     <>
       <div>
-        <div className="flex flex-col sm:flex-row lg:flex-col xl:flex-row gap-8 items-stretch justify-start sm:items-center sm:justify-between lg:items-stretch lg:justify-start xl:items-center xl:justify-between p-6 bg-slate-200/60 dark:bg-slate-900 rounded-3xl border border-slate-300/30 dark:border-slate-700/50">
+        <div className="flex flex-col sm:flex-row lg:flex-col xl:flex-row gap-8 items-stretch justify-start sm:items-center sm:justify-between lg:items-stretch lg:justify-start xl:items-center xl:justify-between p-6 bg-bg-card/75 dark:bg-bg-card rounded-3xl border border-slate-300/30 dark:border-slate-700/50 shadow">
           <div className="flex flex-col gap-2">
-            <h2 className="uppercase tracking-[0.25rem] font-bold text-cyan-400/70 dark:text-cyan-500">
+            <h2 className="uppercase tracking-[0.2rem] font-bold text-primary/98">
               User Management
             </h2>
-            <h2 className="font-semibold text-3xl text-slate-700/75 dark:text-slate-200">
+            <h2 className="font-semibold text-3xl text-text-primary">
               Manage Users
             </h2>
           </div>
@@ -131,9 +129,15 @@ const ProductsPageHeader = ({ inputSearch, handleSearch }) => {
               placeholder="Search users..."
               value={inputSearch}
               onChange={(e) => handleSearch(e.target.value)}
-              className="bg-white/55 dark:!bg-slate-600/40 !h-12 !min-w-64 !grow lg:!grow xl:!grow-0 !rounded-2xl !border !border-slate-300/60 dark:!border-slate-600/60 !text-slate-500 dark:!text-slate-300 transition [&.Mui-focused]:!shadow-[0_0_6px] [&.Mui-focused]:!shadow-slate-400/40 [&.Mui-focused]:dark:!shadow-slate-300/60"
+              className="!h-12 !min-w-64 !grow lg:!grow xl:!grow-0 !rounded-2xl !border !border-border !bg-info-bg/25 !transition-all !duration-200 focus-within:!ring-2 focus-within:!ring-primary/30 dark:focus-within:!ring-primary/70"
+              slotProps={{
+                input: {
+                  className:
+                    "!h-full !w-full !pr-4 !text-sm !text-text-primary !outline-none placeholder:!text-text-muted",
+                },
+              }}
               startAdornment={
-                <InputAdornment className="flex justify-center !h-12 !w-13 !py-3 !text-slate-400">
+                <InputAdornment className="flex justify-center !h-12 !w-13 !py-3 !text-secondary/70">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="24"
@@ -153,7 +157,7 @@ const ProductsPageHeader = ({ inputSearch, handleSearch }) => {
               }
             />
             <Button
-              className="flex gap-2 !px-3 !py-1.5 !bg-slate-300/65 dark:!bg-slate-500 !transition !duration-250 !shadow-[0_0_5px] !shadow-slate-400/30 dark:!shadow-slate-400/70 !rounded-xl !text-slate-600/80 dark:!text-slate-300 hover:!bg-slate-300/90 dark:hover:!bg-slate-500/80"
+              className="flex gap-2 !px-3.5 !py-1.5 !bg-gradient-to-br !from-primary/55 !to-primary-hover/55 hover:!from-primary/40 hover:!to-primary-hover/40 dark:!from-primary/90 dark:hover:!to-primary-hover/75 dark:hover:!from-primary/75 dark:!to-primary-hover/90 !transition !duration-250 !shadow-[0_0_5px] !shadow-slate-400/30 dark:!shadow-slate-400/70 !rounded-lg !text-text-primary/90"
               onClick={() => {
                 setOpenCollapse(!openCollapse);
               }}
@@ -175,7 +179,9 @@ const ProductsPageHeader = ({ inputSearch, handleSearch }) => {
                 <line x1="19" x2="19" y1="8" y2="14" />
                 <line x1="22" x2="16" y1="11" y2="11" />
               </svg>
+
               <span className="font-semibold capitalize">Add User</span>
+
               {openCollapse ? (
                 <KeyboardArrowUpIcon />
               ) : (

@@ -1,145 +1,9 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-
-// =================== GET ALL USERS ===================
-export const getAllUsers = createAsyncThunk(
-  "users/getAllUsers",
-  async (_, thunkAPI) => {
-    try {
-      const response = await fetch(
-        "https://e-commerce-api-3wara.vercel.app/users/all",
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhNDNjYmQ0MzMwYTZjN2ZkYWZlOTc1ZiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc4MzQ1MzgxNCwiZXhwIjoxNzgzODg1ODE0fQ.sEKU3pOYCPuKG06CUT4A2fegt3GzeugQ711DgGL7XEo`,
-          },
-        },
-      );
-
-      const data = await response.json();
-      return data;
-    } catch (error) {
-      return thunkAPI.rejectWithValue(error.message);
-    }
-  },
-);
-
-// =================== ADD USER ===================
-export const addUser = createAsyncThunk(
-  "users/addUser",
-  async (userData, thunkAPI) => {
-    try {
-      const response = await fetch(
-        "https://e-commerce-api-3wara.vercel.app/users/add",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhNDNjYmQ0MzMwYTZjN2ZkYWZlOTc1ZiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc4MzQ1MzgxNCwiZXhwIjoxNzgzODg1ODE0fQ.sEKU3pOYCPuKG06CUT4A2fegt3GzeugQ711DgGL7XEo`,
-          },
-          body: JSON.stringify(userData),
-        },
-      );
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        return thunkAPI.rejectWithValue(data.message);
-      }
-
-      return data;
-    } catch (error) {
-      return thunkAPI.rejectWithValue(error.message);
-    }
-  },
-);
-
-// =================== DELETE USER ===================
-export const deleteUser = createAsyncThunk(
-  "users/deleteUser",
-  async (id, thunkAPI) => {
-    try {
-      const response = await fetch(
-        `https://e-commerce-api-3wara.vercel.app/users/${id}`,
-        {
-          method: "DELETE",
-          headers: {
-            Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhNDNjYmQ0MzMwYTZjN2ZkYWZlOTc1ZiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc4MzQ1MzgxNCwiZXhwIjoxNzgzODg1ODE0fQ.sEKU3pOYCPuKG06CUT4A2fegt3GzeugQ711DgGL7XEo`,
-          },
-        },
-      );
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        return thunkAPI.rejectWithValue(data.message);
-      }
-
-      return data;
-    } catch (error) {
-      return thunkAPI.rejectWithValue(error.message);
-    }
-  },
-);
-
-// =================== EDIT USER ===================
-export const editUser = createAsyncThunk(
-  "users/editUser",
-  async ({ id, formData }, thunkAPI) => {
-    try {
-      const response = await fetch(
-        `https://e-commerce-api-3wara.vercel.app/users/${id}`,
-        {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhNDNjYmQ0MzMwYTZjN2ZkYWZlOTc1ZiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc4MzQ1MzgxNCwiZXhwIjoxNzgzODg1ODE0fQ.sEKU3pOYCPuKG06CUT4A2fegt3GzeugQ711DgGL7XEo`,
-          },
-          body: JSON.stringify(formData),
-        },
-      );
-
-      const data = await response.json();
-      console.log(data.message);
-      if (!response.ok) {
-        return thunkAPI.rejectWithValue(data.message);
-      }
-
-      return data;
-    } catch (error) {
-      return thunkAPI.rejectWithValue(error.message);
-    }
-  },
-);
-
-// =================== CHANGE ROLE ===================
-export const changeUserRole = createAsyncThunk(
-  "users/changeUserRole",
-  async (role, thunkAPI) => {
-    try {
-      const response = await fetch(
-        `https://e-commerce-api-3wara.vercel.app/auth/change-role`,
-        {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhNDNjYmQ0MzMwYTZjN2ZkYWZlOTc1ZiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc4MzQ1MzgxNCwiZXhwIjoxNzgzODg1ODE0fQ.sEKU3pOYCPuKG06CUT4A2fegt3GzeugQ711DgGL7XEo`,
-          },
-          body: JSON.stringify(role),
-        },
-      );
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        return thunkAPI.rejectWithValue(data.message);
-      }
-
-      return data;
-    } catch (error) {
-      return thunkAPI.rejectWithValue(error.message);
-    }
-  },
-);
+import { createSlice } from "@reduxjs/toolkit";
+import { getAllUsersThunk } from "./Thunks/GetAllUsersThunk";
+import { addUserThunk } from "./Thunks/AddUserThunk";
+import { deleteUserThunk } from "./Thunks/DeleteUserThunk";
+import { editUserThunk } from "./Thunks/EditUserThunk";
+import { changeUserRoleThunk } from "./Thunks/ChangeUserRoleThunk";
 
 // =================== INITIAL STATE ===================
 const initialState = {
@@ -167,83 +31,106 @@ const usersSlice = createSlice({
     builder
 
       // ========== GET ALL USERS ==========
-      .addCase(getAllUsers.pending, (state) => {
+      .addCase(getAllUsersThunk.pending, (state) => {
         state.loading = true;
+        state.error = null;
+        state.success = false;
       })
-      .addCase(getAllUsers.fulfilled, (state, action) => {
+      .addCase(getAllUsersThunk.fulfilled, (state, action) => {
+        state.success = true;
         state.loading = false;
+        state.error = null;
         state.count = action.payload?.count;
         state.users = action.payload?.users;
       })
-      .addCase(getAllUsers.rejected, (state, action) => {
+      .addCase(getAllUsersThunk.rejected, (state, action) => {
+        state.success = false;
         state.loading = false;
-        state.error = action.payload;
+        state.error = action.payload?.message;
       })
 
       // ========== Add ==========
-      .addCase(addUser.pending, (state) => {
+      .addCase(addUserThunk.pending, (state) => {
         state.loading = true;
+        state.error = null;
+        state.success = false;
       })
-      .addCase(addUser.fulfilled, (state, action) => {
+      .addCase(addUserThunk.fulfilled, (state, action) => {
         state.loading = false;
         state.success = true;
-        state.users = state.users.filter((user) => user._id !== action.payload);
+        state.error = null;
+        state.count = state.count + 1;
+        state.users.push(action.payload?.user);
       })
-      .addCase(addUser.rejected, (state, action) => {
+      .addCase(addUserThunk.rejected, (state, action) => {
+        state.success = false;
         state.loading = false;
-        state.error = action.payload;
+        state.error = action.payload?.message;
       })
 
       // ========== DELETE ==========
-      .addCase(deleteUser.pending, (state) => {
+      .addCase(deleteUserThunk.pending, (state) => {
         state.loading = true;
+        state.error = null;
+        state.success = false;
       })
-      .addCase(deleteUser.fulfilled, (state, action) => {
+      .addCase(deleteUserThunk.fulfilled, (state, action) => {
         state.loading = false;
         state.success = true;
-        state.users = state.users.filter((user) => user._id !== action.payload);
+        state.error = null;
+        state.count = state.count - 1;
+        state.users = state.users.filter((user) => user._id !== action.payload?._id);
       })
-      .addCase(deleteUser.rejected, (state, action) => {
+      .addCase(deleteUserThunk.rejected, (state, action) => {
+        state.success = false;
         state.loading = false;
-        state.error = action.payload;
+        state.error = action.payload?.message;
       })
 
       // ========== EDIT ==========
-      .addCase(editUser.pending, (state) => {
+      .addCase(editUserThunk.pending, (state) => {
         state.loading = true;
         state.error = null;
         state.success = false;
       })
 
-      .addCase(editUser.fulfilled, (state) => {
+      .addCase(editUserThunk.fulfilled, (state, action) => {
         state.loading = false;
         state.success = true;
+        state.error = null;
+        state.users = state.users.map((user) =>
+          user._id === action.payload?.user._id ? action.payload?.user : user,
+        );
       })
 
-      .addCase(editUser.rejected, (state, action) => {
+      .addCase(editUserThunk.rejected, (state, action) => {
+        state.success = false;
         state.loading = false;
-        state.error = action.payload;
+        state.error = action.payload?.message;
       })
 
       // ========== CHANGE ROLE ==========
-      .addCase(changeUserRole.pending, (state) => {
+      .addCase(changeUserRoleThunk.pending, (state) => {
         state.loading = true;
+        state.error = null;
+        state.success = false;
       })
-      .addCase(changeUserRole.fulfilled, (state, action) => {
+      .addCase(changeUserRoleThunk.fulfilled, (state, action) => {
         state.loading = false;
         state.success = true;
-
+        state.error = null;
         const index = state.users.findIndex(
-          (u) => u._id === action.payload._id,
+          (user) => user._id === action.payload?.user._id,
         );
 
         if (index !== -1) {
-          state.users[index] = action.payload;
+          state.users[index] = action.payload.user;
         }
       })
-      .addCase(changeUserRole.rejected, (state, action) => {
+      .addCase(changeUserRoleThunk.rejected, (state, action) => {
+        state.success = false;
         state.loading = false;
-        state.error = action.payload;
+        state.error = action.payload?.message;
       });
   },
 });

@@ -79,21 +79,21 @@ const EditUserDialog = ({
 
         paper: {
           className:
-            "!bg-gray-200 dark:!bg-slate-800 !border !border-slate-700/90 !rounded-3xl !max-h-[80vh] !w-screen sm:!w-[35vw]",
+            "!bg-bg-card !border !border-border !rounded-3xl !max-h-[80vh] !w-screen sm:!w-[35vw]",
         },
       }}
       disableScrollLock
     >
       {/* Header */}
       <div className="flex items-center justify-between px-6 pt-6">
-        <DialogTitle className="!p-0 !text-2xl !font-bold !text-slate-600 dark:!text-white/90">
+        <DialogTitle className="!p-0 !text-2xl !font-bold !text-secondary dark:!text-text-primary/95">
           {title}
         </DialogTitle>
 
         <IconButton
           onClick={closeHandler}
           disabled={loading}
-          className="!text-slate-400 hover:!text-slate-500 dark:hover:!text-white/60"
+          className="!text-secondary/80 hover:!text-secondary"
         >
           <CloseIcon />
         </IconButton>
@@ -105,7 +105,7 @@ const EditUserDialog = ({
           <div>
             <label
               htmlFor="username"
-              className="mb-2 block text-xs font-bold uppercase tracking-wider text-slate-500/80 dark:text-slate-400"
+              className="mb-2 block text-xs font-bold uppercase tracking-wider text-secondary/75 dark:text-secondary/90"
             >
               Username
             </label>
@@ -118,7 +118,7 @@ const EditUserDialog = ({
               id="username"
               name="username"
               type="text"
-              className="w-full rounded-xl border-2 border-slate-500/30 dark:border-slate-700 bg-white dark:bg-slate-700/20 px-4 py-3 text-slate-500 dark:text-white/90 outline-none transition duration-200 focus:border-slate-500/70 focus:shadow-[0_0_5px] focus:shadow-slate-400/50"
+              className="w-full bg-info-bg/25 py-3 px-4 text-sm text-text-primary placeholder:text-text-muted/50 border border-border rounded-full outline-0 focus:ring-2 focus:ring-primary/30 dark:focus:ring-primary/70 transition-all duration-200"
             />
 
             <p className="mt-1 text-sm text-red-400 min-h-[20px]">
@@ -130,7 +130,7 @@ const EditUserDialog = ({
           <div>
             <label
               htmlFor="phone"
-              className="mb-2 block text-xs font-bold uppercase tracking-wider text-slate-500/80 dark:text-slate-400"
+              className="mb-2 block text-xs font-bold uppercase tracking-wider text-secondary/75 dark:text-secondary/90"
             >
               Phone
             </label>
@@ -143,7 +143,7 @@ const EditUserDialog = ({
               id="phone"
               name="phone"
               type="text"
-              className="w-full rounded-xl border-2 border-slate-500/30 dark:border-slate-700 bg-white dark:bg-slate-700/20 px-4 py-3 text-slate-500 dark:text-white/90 outline-none transition duration-200 focus:border-slate-500/70 focus:shadow-[0_0_5px] focus:shadow-slate-400/50"
+              className="w-full bg-info-bg/25 py-3 px-4 text-sm text-text-primary placeholder:text-text-muted/50 border border-border rounded-full outline-0 focus:ring-2 focus:ring-primary/30 dark:focus:ring-primary/70 transition-all duration-200"
             />
 
             <p className="mt-1 text-sm text-red-400 min-h-[20px]">
@@ -155,7 +155,7 @@ const EditUserDialog = ({
           <div>
             <label
               htmlFor="avatar"
-              className="mb-2 block text-xs font-bold uppercase tracking-wider text-slate-500/80 dark:text-slate-400"
+              className="mb-2 block text-xs font-bold uppercase tracking-wider text-secondary/75 dark:text-secondary/90"
             >
               Avatar URL
             </label>
@@ -168,7 +168,7 @@ const EditUserDialog = ({
               id="avatar"
               name="avatar"
               type="url"
-              className="w-full rounded-xl border-2 border-slate-500/30 dark:border-slate-700 bg-white dark:bg-slate-700/20 px-4 py-3 text-slate-500 dark:text-white/90 outline-none transition duration-200 focus:border-slate-500/70 focus:shadow-[0_0_5px] focus:shadow-slate-400/50"
+              className="w-full bg-info-bg/25 py-3 px-4 text-sm text-text-primary placeholder:text-text-muted/50 border border-border rounded-full outline-0 focus:ring-2 focus:ring-primary/30 dark:focus:ring-primary/70 transition-all duration-200"
             />
 
             <p className="mt-1 text-sm text-red-400 min-h-[20px]">
@@ -182,7 +182,7 @@ const EditUserDialog = ({
               type="button"
               onClick={closeHandler}
               disabled={loading}
-              className="!rounded-xl !border !border-slate-400/30 dark:!border-slate-600 !px-3 !py-2 !font-medium !text-slate-500 dark:!text-slate-300 !transition hover:!bg-gray-300/50 dark:hover:!bg-slate-700"
+              className="!capitalize !rounded-full !px-5 !py-2.5 !border !border-border !text-text-secondary hover:!bg-bg-hover/40 transition-all"
             >
               Cancel
             </Button>
@@ -190,7 +190,7 @@ const EditUserDialog = ({
             <Button
               type="submit"
               disabled={loading}
-              className="!rounded-xl !bg-sky-600 !px-3 !py-2 !font-semibold !text-white !transition hover:!bg-sky-700 disabled:!cursor-not-allowed disabled:!opacity-80 dark:disabled:!opacity-50"
+              className="!capitalize !font-semibold !rounded-full !px-4 !py-2.5 !bg-primary/80 hover:!bg-primary-hover/70 disabled:!opacity-70 !text-white !flex !items-center !gap-2"
             >
               {loading ? "Saving..." : "Save Changes"}
             </Button>
