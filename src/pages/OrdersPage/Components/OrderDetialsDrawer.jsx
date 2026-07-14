@@ -162,7 +162,7 @@ const OrderDetailsDrawer = ({ open, onClose, order }) => {
             {order?.items?.map((item, index, array) => (
               <div key={item} className="flex flex-col gap-2">
                 <div
-                  className={`flex justify-between items-center ${array.length - 1 !== index ? "border-b border-secondary/15" : ""}`}
+                  className={`flex justify-between items-center ${array.length - 1 !== index ? "border-b border-secondary/15 pb-4" : ""}`}
                 >
                   <div className="flex items-center gap-4">
                     <img

@@ -9,7 +9,7 @@ import OrderDetialsDrawer from "./OrderDetialsDrawer";
 const OrdersTable = ({ numberOfItems, changeOrdersNumber }) => {
   const getOrdersDispatch = useDispatch();
   const [isPagination, setIsPagination] = useState(false);
-  const { orders, totalPages, currentPage, loading } = useSelector(
+  const { filteredOrders, totalPages, currentPage, loading } = useSelector(
     (store) => store.orders,
   );
 
@@ -25,7 +25,7 @@ const OrdersTable = ({ numberOfItems, changeOrdersNumber }) => {
 
   // Dynamic max height calculation to fit full table rows without clipping
   useEffect(() => {
-    if (!orders?.length || !td.current || !th.current) return;
+    if (!filteredOrders?.length || !td.current || !th.current) return;
 
     const rowHeight = td.current.getBoundingClientRect().height;
     const headerHeight = th.current.getBoundingClientRect().height;
@@ -38,7 +38,7 @@ const OrdersTable = ({ numberOfItems, changeOrdersNumber }) => {
     changeOrdersNumber(itemsCount);
 
     /* eslint-disable react-hooks/exhaustive-deps */
-  }, [orders]);
+  }, [filteredOrders]);
 
   const paginationHandler = (_, value) => {
     const fetchOrders = async () => {
@@ -97,8 +97,8 @@ const OrdersTable = ({ numberOfItems, changeOrdersNumber }) => {
             </thead>
 
             <tbody className="bg-secondary/1 dark:bg-bg-card">
-              {orders?.length > 0 ? (
-                orders?.map((order, index, array) => (
+              {filteredOrders?.length > 0 ? (
+                filteredOrders?.map((order, index, array) => (
                   <tr
                     ref={index === 0 ? td : null}
                     key={order._id}
@@ -248,23 +248,21 @@ const OrdersTable = ({ numberOfItems, changeOrdersNumber }) => {
             <tfoot className="sticky bottom-0 z-10 !bg-bg-main">
               <tr ref={tf} className="bg-secondary/8 dark:bg-secondary/16">
                 <td colSpan={6} className="py-2.5 px-6">
-                  {orders.length > 0 ? (
-                    <div className="flex justify-end">
-                      <Pagination
-                        count={totalPages}
-                        page={currentPage}
-                        onChange={paginationHandler}
-                        renderItem={(item) => (
-                          <PaginationItem
-                            {...item}
-                            className={`!rounded-lg !border !border-secondary/20 !text-text-primary/90  dark:!border-secondary/20 ${item.selected ? "!bg-primary/85 !text-white !border-primary hover:!bg-primary" : "hover:!bg-secondary/10"}`}
-                          />
-                        )}
-                      />
-                    </div>
-                  ) : (
-                    <></>
-                  )}
+                  {/* {filteredOrders.length > 0 ? ( */}
+                  <div className="flex justify-between items-center">
+                    <p className="text-xs text-text-primary/80">{`Page ${currentPage} of ${totalPages}`}</p>
+                    <Pagination
+                      count={totalPages}
+                      page={currentPage}
+                      onChange={paginationHandler}
+                      renderItem={(item) => (
+                        <PaginationItem
+                          {...item}
+                          className={`!rounded-lg !border !border-secondary/20 !text-text-primary/90  dark:!border-secondary/20 ${item.selected ? "!bg-primary/85 !text-white !border-primary hover:!bg-primary" : "hover:!bg-secondary/10"}`}
+                        />
+                      )}
+                    />
+                  </div>
                 </td>
               </tr>
             </tfoot>
@@ -272,25 +270,22 @@ const OrdersTable = ({ numberOfItems, changeOrdersNumber }) => {
         ) : isPagination && loading ? (
           <OrdersTableSkeleton numberOfItems={numberOfItems}>
             <tfoot className="sticky bottom-0 z-10 !bg-bg-main">
-              <tr ref={tf} className="bg-secondary/5 dark:bg-secondary/15">
+              <tr ref={tf} className="bg-secondary/8 dark:bg-secondary/16">
                 <td colSpan={6} className="py-2.5 px-6">
-                  {orders.length > 0 ? (
-                    <div className="flex justify-end">
-                      <Pagination
-                        count={totalPages}
-                        page={currentPage}
-                        onChange={paginationHandler}
-                        renderItem={(item) => (
-                          <PaginationItem
-                            {...item}
-                            className={`!rounded-lg !border !border-secondary/20 !text-text-primary/90  dark:!border-secondary/20 ${item.selected ? "!bg-primary/85 !text-white !border-primary hover:!bg-primary" : "hover:!bg-secondary/10"}`}
-                          />
-                        )}
-                      />
-                    </div>
-                  ) : (
-                    <></>
-                  )}
+                  <div className="flex justify-between items-center">
+                    <p className="text-xs text-text-primary/80">{`Page ${currentPage} of ${totalPages}`}</p>
+                    <Pagination
+                      count={totalPages}
+                      page={currentPage}
+                      onChange={paginationHandler}
+                      renderItem={(item) => (
+                        <PaginationItem
+                          {...item}
+                          className={`!rounded-lg !border !border-secondary/20 !text-text-primary/90  dark:!border-secondary/20 ${item.selected ? "!bg-primary/85 !text-white !border-primary hover:!bg-primary" : "hover:!bg-secondary/10"}`}
+                        />
+                      )}
+                    />
+                  </div>
                 </td>
               </tr>
             </tfoot>

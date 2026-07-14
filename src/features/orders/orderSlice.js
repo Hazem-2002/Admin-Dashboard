@@ -4,6 +4,13 @@ import { updateOrderStatusThunk } from "./Thunks/UpdateOrderStatusThunk";
 
 const initialState = {
   orders: [],
+  filteredOrders: [],
+  filters: {
+    method: "All Methods",
+    payment: "All Payments",
+    status: "All Statuses",
+    input: "",
+  },
   count: 0,
   totalPages: 0,
   currentPage: 1,
@@ -22,6 +29,39 @@ const ordersSlice = createSlice({
       state.success = false;
       state.error = null;
     },
+
+    setFiltersOrders(state, action) {
+      state.filters = action.payload;
+      console.log(action.payload);
+
+      const { input, status, payment, method } = action.payload;
+
+      state.filteredOrders = state.orders.filter((order) => {
+        const methodMatch =
+          method === "All Methods" ||
+          order.paymentMethod.toLowerCase() === method.toLowerCase();
+
+        const paymentMatch =
+          payment === "All Payments" ||
+          order.paymentStatus.toLowerCase() === payment.toLowerCase();
+
+        const statusMatch =
+          status === "All Statuses" ||
+          order.status.toLowerCase() === status.toLowerCase();
+
+        const inputMatch =
+          !input ||
+          order.user?.username
+            ?.toLowerCase()
+            .includes(input.trim().toLowerCase());
+
+        return methodMatch && paymentMatch && statusMatch && inputMatch;
+      });
+    },
+  },
+
+  resetFilteredOrders(state) {
+    state.filteredOrders = state.orders;
   },
 
   extraReducers: (builder) => {
@@ -38,6 +78,31 @@ const ordersSlice = createSlice({
         state.error = null;
 
         state.orders = action.payload.orders;
+
+        const { method, payment, status, input } = state.filters;
+
+        state.filteredOrders = state.orders.filter((order) => {
+          const methodMatch =
+            method === "All Methods" ||
+            order.paymentMethod.toLowerCase() === method.toLowerCase();
+
+          const paymentMatch =
+            payment === "All Payments" ||
+            order.paymentStatus.toLowerCase() === payment.toLowerCase();
+
+          const statusMatch =
+            status === "All Statuses" ||
+            order.status.toLowerCase() === status.toLowerCase();
+
+          const inputMatch =
+            !input ||
+            order.user?.username
+              ?.toLowerCase()
+              .includes(input.trim().toLowerCase());
+
+          return methodMatch && paymentMatch && statusMatch && inputMatch;
+        });
+
         state.count = action.payload.total;
         state.totalPages = action.payload.totalPages;
         state.currentPage = action.payload.currentPage;
@@ -77,6 +142,7 @@ const ordersSlice = createSlice({
   },
 });
 
-export const { clearStatus } = ordersSlice.actions;
+export const { clearStatus, setFiltersOrders, resetFilteredOrders } =
+  ordersSlice.actions;
 
 export default ordersSlice.reducer;

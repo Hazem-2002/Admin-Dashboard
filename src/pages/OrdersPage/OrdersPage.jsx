@@ -3,6 +3,7 @@ import { useState, useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllOrdersThunk } from "../../features/orders/Thunks/GetAllOrdersThunk";
 import OrdersTable from "./Components/OrdersTable";
+import OrdersPageHeader from "./Components/OrdersPageHeader";
 
 const OrdersPage = () => {
   const getOrdersDispatch = useDispatch();
@@ -22,6 +23,8 @@ const OrdersPage = () => {
 
   return (
     <div className="flex flex-col gap-8 p-8">
+      <OrdersPageHeader />
+
       <OrdersTable
         changeOrdersNumber={changeOrdersNumber}
         numberOfItems={numberOfItems}
