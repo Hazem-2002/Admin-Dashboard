@@ -1,7 +1,7 @@
 import React from "react";
 import { Skeleton } from "@mui/material";
 
-const OrdersTableSkeleton = ({ children }) => {
+const OrdersTableSkeleton = ({ children, numberOfItems }) => {
   return (
     <table className="min-w-[620px] sm:min-w-full border-separate border-spacing-0">
       <thead className="sticky top-0 z-10 bg-bg-main text-text-primary/85">
@@ -20,7 +20,9 @@ const OrdersTableSkeleton = ({ children }) => {
       </thead>
 
       <tbody className="bg-secondary/[0.01] dark:bg-bg-card">
-        {Array.from({ length: 5 }).map((_, rowIndex, array) => (
+        {Array.from({
+          length: numberOfItems ? numberOfItems : 5,
+        }).map((_, rowIndex, array) => (
           <tr key={rowIndex}>
             {/* Order */}
             <td
@@ -28,7 +30,7 @@ const OrdersTableSkeleton = ({ children }) => {
             >
               <Skeleton
                 variant="text"
-                width={70}
+                width={60}
                 height={18}
                 className="!bg-secondary/30"
               />
@@ -49,13 +51,13 @@ const OrdersTableSkeleton = ({ children }) => {
                 <div>
                   <Skeleton
                     variant="text"
-                    width={100}
+                    width={90}
                     height={18}
                     className="!bg-secondary/30"
                   />
                   <Skeleton
                     variant="text"
-                    width={140}
+                    width={130}
                     height={14}
                     className="!bg-secondary/30"
                   />
@@ -64,37 +66,43 @@ const OrdersTableSkeleton = ({ children }) => {
             </td>
 
             {/* Date */}
-            <td className={`py-4 px-6 ${array.length - 1 !== rowIndex ? "border-b" : ""} border-secondary/15 dark:border-secondary/20`}>
+            <td
+              className={`py-4 px-6 ${array.length - 1 !== rowIndex ? "border-b" : ""} border-secondary/15 dark:border-secondary/20`}
+            >
               <Skeleton
                 variant="text"
-                width={80}
+                width={70}
                 height={18}
                 className="mx-auto !bg-secondary/30"
               />
             </td>
 
             {/* Status */}
-            <td className={`py-4 px-6 ${array.length - 1 !== rowIndex ? "border-b" : ""} border-secondary/15 dark:border-secondary/20`}>
+            <td
+              className={`py-4 px-6 ${array.length - 1 !== rowIndex ? "border-b" : ""} border-secondary/15 dark:border-secondary/20`}
+            >
               <Skeleton
                 variant="rounded"
-                width={90}
+                width={80}
                 height={26}
                 className="mx-auto !bg-secondary/30"
               />
             </td>
 
             {/* Payment */}
-            <td className={`py-4 px-6 ${array.length - 1 !== rowIndex ? "border-b" : ""} border-secondary/15 dark:border-secondary/20`}>
+            <td
+              className={`py-4 px-6 ${array.length - 1 !== rowIndex ? "border-b" : ""} border-secondary/15 dark:border-secondary/20`}
+            >
               <div className="flex flex-col items-center gap-1">
                 <Skeleton
                   variant="rounded"
-                  width={90}
+                  width={80}
                   height={26}
                   className="!bg-secondary/30"
                 />
                 <Skeleton
                   variant="text"
-                  width={70}
+                  width={60}
                   height={14}
                   className="!bg-secondary/30"
                 />
@@ -102,10 +110,12 @@ const OrdersTableSkeleton = ({ children }) => {
             </td>
 
             {/* Total */}
-            <td className={`py-4 px-6 ${array.length - 1 !== rowIndex ? "border-b" : ""} border-secondary/15 dark:border-secondary/20`}>
+            <td
+              className={`py-4 px-6 ${array.length - 1 !== rowIndex ? "border-b" : ""} border-secondary/15 dark:border-secondary/20`}
+            >
               <Skeleton
                 variant="text"
-                width={90}
+                width={80}
                 height={20}
                 className="mx-auto !bg-secondary/30"
               />

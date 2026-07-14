@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { getAllOrdersThunk } from "./Thunks/GetAllOrdersThunk";
+import { updateOrderStatusThunk } from "./Thunks/UpdateOrderStatusThunk";
 
 const initialState = {
   orders: [],
@@ -42,6 +43,33 @@ const ordersSlice = createSlice({
         state.currentPage = action.payload.currentPage;
       })
       .addCase(getAllOrdersThunk.rejected, (state, action) => {
+        state.loading = false;
+        state.success = false;
+        state.error = action.payload;
+      })
+
+      // ========== CHANGE ORDER STATUS ==========
+      .addCase(updateOrderStatusThunk.pending, (state) => {
+        state.loading = true;
+        state.success = false;
+        state.error = null;
+      })
+      .addCase(updateOrderStatusThunk.fulfilled, (state, action) => {
+        state.loading = false;
+        state.success = true;
+        state.error = null;
+
+        const updatedOrder = action.payload.order;
+
+        const index = state.orders.findIndex(
+          (order) => order._id === updatedOrder._id,
+        );
+
+        if (index !== -1) {
+          state.orders[index] = updatedOrder;
+        }
+      })
+      .addCase(updateOrderStatusThunk.rejected, (state, action) => {
         state.loading = false;
         state.success = false;
         state.error = action.payload;
