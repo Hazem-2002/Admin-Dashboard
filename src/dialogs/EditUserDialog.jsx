@@ -1,12 +1,7 @@
-import {
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  IconButton,
-  Button,
-} from "@mui/material";
+import { Dialog, DialogTitle, DialogContent, IconButton } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { useState } from "react";
+import Button from "../components/Button";
 
 const EditUserDialog = ({
   open,
@@ -180,12 +175,11 @@ const EditUserDialog = ({
           <div className="flex justify-end gap-3 pt-3">
             <Button
               type="button"
+              text="Cancel"
               onClick={closeHandler}
-              disabled={loading}
-              className="!capitalize !rounded-full !px-5 !py-2.5 !border !border-border !text-text-secondary hover:!bg-bg-hover/40 transition-all"
-            >
-              Cancel
-            </Button>
+              variant="secondary"
+              className="!bg-red-500 !text-white"
+            />
 
             <Button
               type="submit"

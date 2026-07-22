@@ -15,17 +15,17 @@ const Sidebar = ({ open, handleDrawerToggle }) => {
       slotProps={{
         paper: {
           className:
-            "md:!w-68 lg:!w-72 !border-r-2 !border-border !bg-bg-sidebar",
+            "!w-50 sm:!w-60 md:!w-70 lg:!w-54 xl:!w-72 !border-r-2 !border-border !bg-bg-sidebar",
         },
       }}
     >
-      <aside className="flex h-full flex-col gap-6 py-6 px-4 md:p-6">
+      <aside className="flex h-full flex-col gap-6 p-5">
         <div>
-          <p className="text-[10px] md:text-xs uppercase font-bold tracking-[0.25em] text-primary">
+          <p className="text-[10px] lg:text-xs uppercase font-bold tracking-[0.25em] text-primary">
             Commerce
           </p>
 
-          <h2 className="mt-sm text-normal md:text-xl font-semibold text-text-primary">
+          <h2 className="mt-sm text-normal lg:text-xl font-semibold text-text-primary">
             Admin Panel
           </h2>
         </div>

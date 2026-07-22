@@ -1,21 +1,17 @@
 import React from "react";
 import { Button, Badge, Avatar } from "@mui/material";
-import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../features/auth/authSlice";
+import { toggleTheme } from "../features/theme/themeSlice";
 
 const Header = ({ handleDrawerToggle }) => {
-  const [theme, setTheme] = useState(localStorage.getItem("theme") || "light");
   const logoutDispatch = useDispatch();
+  const themeDispatch = useDispatch();
   const { user } = useSelector((store) => store.auth);
-
-  useEffect(() => {
-    document.documentElement.classList.toggle("dark", theme === "dark");
-    localStorage.setItem("theme", theme);
-  }, [theme]);
+  const { theme } = useSelector((store) => store.theme);
 
   const handleChangeTheme = () => {
-    setTheme((prev) => (prev === "dark" ? "light" : "dark"));
+    themeDispatch(toggleTheme());
   };
 
   const handleLogOut = async () => {
@@ -27,8 +23,8 @@ const Header = ({ handleDrawerToggle }) => {
   };
 
   return (
-    <header className="sticky top-0 border-b border-border px-4 md:px-6 py-2.5 shadow-sm flex items-center bg-bg-navbar dark:bg-bg-navbar/70 z-sticky">
-      <div className="w-full flex justify-between items-center bg-bg-navbar dark:bg-bg-navbar/80">
+    <header className="sticky top-0 border-b border-border shadow-sm flex items-center bg-bg-navbar dark:bg-bg-main z-sticky">
+      <div className="w-full px-4 md:px-6 py-2.5 flex justify-between items-center bg-bg-navbar dark:bg-bg-navbar/70">
         <div className="flex items-center gap-4">
           <Button
             variant="contained"
@@ -54,15 +50,26 @@ const Header = ({ handleDrawerToggle }) => {
           </Button>
 
           <div className="hidden md:flex gap-6">
-            <img
-              src={
-                theme === "dark"
-                  ? "../../../public/darkLogo.png"
-                  : "../../../public/logo.png"
-              }
-              alt="logo"
-              className="w-32"
-            />
+            <>
+              {/* Small screens */}
+              <img
+                src="../../../public/smalllogo.png"
+                alt="logo"
+                className="w-10 lg:hidden"
+              />
+
+              {/* Large screens */}
+              <img
+                src={
+                  theme === "dark"
+                    ? "../../../public/darkLogo.png"
+                    : "../../../public/logo.png"
+                }
+                alt="logo"
+                className="w-32 hidden lg:block"
+              />
+            </>
+
             <div className="hidden md:flex flex-col gap-1">
               <h3 className="text-text-primary text-lg capitalize font-semibold">
                 Admin Dashboard

@@ -4,6 +4,7 @@ import axios from "axios";
 export const login = createAsyncThunk(
   "auth/login",
   async (loginData, thunkAPI) => {
+    console.log(loginData)
     try {
       const res = await axios.post("https://e-commerce-api-3wara.vercel.app/auth/login", loginData);
 

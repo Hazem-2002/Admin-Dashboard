@@ -1,97 +1,46 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 import { getProductByIdThunk } from "./Thunks/GetSingleProductThunk.js";
 import { addProductThunk } from "./Thunks/AddProductThunk.js";
-
-// =================== GET ALL PRODUCTS ===================
-export const getAllProducts = createAsyncThunk(
-  "products/getAllproducts",
-  async (_, thunkAPI) => {
-    try {
-      const response = await fetch(
-        "https://e-commerce-api-3wara.vercel.app/products",
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhNDNjYmQ0MzMwYTZjN2ZkYWZlOTc1ZiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc4MzQ1MzgxNCwiZXhwIjoxNzgzODg1ODE0fQ.sEKU3pOYCPuKG06CUT4A2fegt3GzeugQ711DgGL7XEo`,
-          },
-        },
-      );
-
-      const data = await response.json();
-      return data;
-    } catch (error) {
-      return thunkAPI.rejectWithValue(error.message);
-    }
-  },
-);
-
-
-// =================== DELETE PRODUCT ===================
-export const deleteProduct = createAsyncThunk(
-  "products/deleteproduct",
-  async (id, thunkAPI) => {
-    try {
-      const response = await fetch(
-        `https://e-commerce-api-3wara.vercel.app/products/${id}`,
-        {
-          method: "DELETE",
-          headers: {
-            Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhNDNjYmQ0MzMwYTZjN2ZkYWZlOTc1ZiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc4MzQ1MzgxNCwiZXhwIjoxNzgzODg1ODE0fQ.sEKU3pOYCPuKG06CUT4A2fegt3GzeugQ711DgGL7XEo`,
-          },
-        },
-      );
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        return thunkAPI.rejectWithValue(data.message);
-      }
-
-      return data;
-    } catch (error) {
-      return thunkAPI.rejectWithValue(error.message);
-    }
-  },
-);
-
-// =================== EDIT PRODUCT ===================
-export const editProduct = createAsyncThunk(
-  "products/editproduct",
-  async ({ id, formData }, thunkAPI) => {
-    try {
-      const response = await fetch(
-        `https://e-commerce-api-3wara.vercel.app/products/${id}`,
-        {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhNDNjYmQ0MzMwYTZjN2ZkYWZlOTc1ZiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc4MzQ1MzgxNCwiZXhwIjoxNzgzODg1ODE0fQ.sEKU3pOYCPuKG06CUT4A2fegt3GzeugQ711DgGL7XEo`,
-          },
-          body: JSON.stringify(formData),
-        },
-      );
-
-      const data = await response.json();
-      console.log(data.message);
-      if (!response.ok) {
-        return thunkAPI.rejectWithValue(data.message);
-      }
-
-      return data;
-    } catch (error) {
-      return thunkAPI.rejectWithValue(error.message);
-    }
-  },
-);
-
+import { updateProductThunk } from "./Thunks/UpdateProductThunk.js";
+import { getProductsThunk } from "./Thunks/getAllProductsThunk.js";
 // =================== INITIAL STATE ===================
 const initialState = {
   products: [],
   product: null,
-  count: 0,
+  filteredProducts: [],
+  filters: {
+    inputSearch: "",
+    category: "All Categories",
+    subcategory: "",
+  },
   loading: false,
   error: null,
   success: false,
+  totalPages: 1,
+  currentPage: 1,
+  totalProducts: 1,
+};
+
+const filterProducts = (products = [], filters) => {
+  const { inputSearch, category, subcategory } = filters;
+
+  return products.filter((product) => {
+    const categoryMatch =
+      category === "All Categories" ||
+      product.category?.toLowerCase() === category.toLowerCase();
+
+    const subcategoryMatch =
+      !subcategory ||
+      product.subcategory
+        ?.toLowerCase()
+        .includes(subcategory.trim().toLowerCase());
+
+    const inputSearchMatch =
+      !inputSearch ||
+      product.name?.toLowerCase().includes(inputSearch.trim().toLowerCase());
+
+    return categoryMatch && subcategoryMatch && inputSearchMatch;
+  });
 };
 
 // =================== SLICE ===================
@@ -105,23 +54,43 @@ const productsSlice = createSlice({
       state.error = null;
       state.success = false;
     },
+
+    setFiltersProducts(state, action) {
+      state.filters = action.payload;
+
+      state.filteredProducts = filterProducts(state.products, action.payload);
+    },
+
+    resetFilteredProducts(state) {
+      state.filteredOrders = state.orders;
+    },
   },
 
   extraReducers: (builder) => {
     builder
 
       // ========== GET ALL Products ==========
-      .addCase(getAllProducts.pending, (state) => {
+      .addCase(getProductsThunk.pending, (state) => {
         state.loading = true;
+        state.error = null;
+        state.success = false;
       })
-      .addCase(getAllProducts.fulfilled, (state, action) => {
+      .addCase(getProductsThunk.fulfilled, (state, action) => {
+        state.error = null;
+        state.success = true;
         state.loading = false;
-        state.count = action.payload?.count;
         state.products = action.payload?.products;
+        state.totalPages = action.payload?.totalPages;
+        state.currentPage = action.payload?.currentPage;
+        state.totalProducts = action.payload?.totalProducts;
+        state.filteredProducts = filterProducts(
+          action.payload?.products,
+          state.filters,
+        );
       })
-      .addCase(getAllProducts.rejected, (state, action) => {
+      .addCase(getProductsThunk.rejected, (state) => {
+        state.success = false;
         state.loading = false;
-        state.error = action.payload;
       })
 
       // ================= GET PRODUCT BY ID =================
@@ -148,9 +117,11 @@ const productsSlice = createSlice({
       .addCase(addProductThunk.fulfilled, (state, action) => {
         state.loading = false;
         state.success = true;
-        state.products = state.products.filter(
-          (product) => product._id !== action.payload,
+        state.filteredProducts = filterProducts(
+          [...state.products, action.payload.product],
+          state.filters,
         );
+        state.products.push(action.payload.product);
       })
       .addCase(addProductThunk.rejected, (state, action) => {
         state.loading = false;
@@ -158,40 +129,36 @@ const productsSlice = createSlice({
       })
 
       // ========== DELETE ==========
-      .addCase(deleteProduct.pending, (state) => {
-        state.loading = true;
-      })
-      .addCase(deleteProduct.fulfilled, (state, action) => {
-        state.loading = false;
-        state.success = true;
-        state.products = state.products.filter(
-          (product) => product._id !== action.payload,
-        );
-      })
-      .addCase(deleteProduct.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
-      })
 
       // ========== EDIT ==========
-      .addCase(editProduct.pending, (state) => {
+      .addCase(updateProductThunk.pending, (state) => {
         state.loading = true;
         state.error = null;
         state.success = false;
       })
 
-      .addCase(editProduct.fulfilled, (state) => {
+      .addCase(updateProductThunk.fulfilled, (state, action) => {
         state.loading = false;
         state.success = true;
+        const products = state.products.map((product) =>
+          product._id === action.payload.product._id
+            ? action.payload.product
+            : product,
+        );
+
+        state.products = products;
+
+        state.filteredProducts = filterProducts(products, state.filters);
       })
 
-      .addCase(editProduct.rejected, (state, action) => {
+      .addCase(updateProductThunk.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });
   },
 });
 
-export const { clearStatus } = productsSlice.actions;
+export const { clearStatus, setFiltersProducts, resetFilteredProducts } =
+  productsSlice.actions;
 
 export default productsSlice.reducer;

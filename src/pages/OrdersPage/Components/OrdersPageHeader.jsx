@@ -1,9 +1,10 @@
 import React from "react";
-import { Select, MenuItem, InputBase, InputAdornment } from "@mui/material";
+import { InputBase, InputAdornment } from "@mui/material";
 import { setFiltersOrders } from "../../../features/orders/orderSlice";
 import SearchIcon from "@mui/icons-material/Search";
 import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
+import Select from "../../../components/Select";
 
 const OrdersPageHeader = () => {
   const { count } = useSelector((store) => store.orders);
@@ -54,164 +55,41 @@ const OrdersPageHeader = () => {
         />
 
         <div className="w-full flex flex-col sm:flex-row gap-4 grow md:grow-0">
-            <Select
-              id="status"
-              value={searchFormData.status}
-              onChange={(e) =>
-                searchOrderHandler({ ...searchFormData, status: e.target.value })
-              }
-              displayEmpty
-              className={`!min-w-[50px] !grow !h-10.5 !bg-info-bg/25 !text-sm !text-text-primary/85 capitalize !rounded-md !outline-none !transition-all !duration-200 [&_.MuiOutlinedInput-notchedOutline]:!border [&_.MuiOutlinedInput-notchedOutline]:!border-border [&.Mui-focused]:!ring-2 [&.Mui-focused]:!ring-primary/30 dark:[&.Mui-focused]:!ring-primary/70 [&.Mui-focused_.MuiOutlinedInput-notchedOutline]:!border-0 [&_.MuiSelect-icon]:!text-text-primary/60`}
-              MenuProps={{
-                slotProps: {
-                  paper: {
-                    className:
-                      "hide-scrollbar !bg-bg-hover !text-text-primary !border !border-primary/15 !rounded-lg",
-                  },
-                },
-              }}
-            >
-              <MenuItem
-                value="All Statuses"
-                className={`hover:!bg-secondary/4 !transition !duration-100 !text-[13px] !py-1 capitalize [&.Mui-selected]:!bg-primary/70 [&.Mui-selected:hover]:!bg-primary/70`}
-              >
-                All Statuses
-              </MenuItem>
-            
-              <MenuItem
-                value="Pending"
-                className={`hover:!bg-secondary/4 !transition !duration-100 !text-[13px] !py-1 capitalize [&.Mui-selected]:!bg-primary/70 [&.Mui-selected:hover]:!bg-primary/70`}
-              >
-                Pending
-              </MenuItem>
-            
-              <MenuItem
-                value="Confirmed"
-                className={`hover:!bg-secondary/4 !transition !duration-100 !text-[13px] !py-1 capitalize [&.Mui-selected]:!bg-primary/70 [&.Mui-selected:hover]:!bg-primary/70`}
-              >
-                Confirmed
-              </MenuItem>
-            
-              <MenuItem
-                value="Processing"
-                className={`hover:!bg-secondary/4 !transition !duration-100 !text-[13px] !py-1 capitalize [&.Mui-selected]:!bg-primary/70 [&.Mui-selected:hover]:!bg-primary/70`}
-              >
-                Processing
-              </MenuItem>
-            
-              <MenuItem
-                value="Shipped"
-                className={`hover:!bg-secondary/4 !transition !duration-100 !text-[13px] !py-1 capitalize [&.Mui-selected]:!bg-primary/70 [&.Mui-selected:hover]:!bg-primary/70`}
-              >
-                Shipped
-              </MenuItem>
-            
-              <MenuItem
-                value="Delivered"
-                className={`hover:!bg-secondary/4 !transition !duration-100 !text-[13px] !py-1 capitalize [&.Mui-selected]:!bg-primary/70 [&.Mui-selected:hover]:!bg-primary/70`}
-              >
-                Delivered
-              </MenuItem>
-            
-              <MenuItem
-                value="Cancelled"
-                className={`hover:!bg-secondary/4 !transition !duration-100 !text-[13px] !py-1 capitalize [&.Mui-selected]:!bg-primary/70 [&.Mui-selected:hover]:!bg-primary/70`}
-              >
-                Cancelled
-              </MenuItem>
-            
-              <MenuItem
-                value="Returned"
-                className={`hover:!bg-secondary/4 !transition !duration-100 !text-[13px] !py-1 capitalize [&.Mui-selected]:!bg-primary/70 [&.Mui-selected:hover]:!bg-primary/70`}
-              >
-                Returned
-              </MenuItem>
-            </Select>
-            
-            <Select
-              id="payment"
-              value={searchFormData.payment}
-              onChange={(e) =>
-                searchOrderHandler({ ...searchFormData, payment: e.target.value })
-              }
-              displayEmpty
-              className={`!min-w-[50px] !grow !h-10.5 !bg-info-bg/25 !text-sm !text-text-primary/85 capitalize !rounded-md !outline-none !transition-all !duration-200 [&_.MuiOutlinedInput-notchedOutline]:!border [&_.MuiOutlinedInput-notchedOutline]:!border-border [&.Mui-focused]:!ring-2 [&.Mui-focused]:!ring-primary/30 dark:[&.Mui-focused]:!ring-primary/70 [&.Mui-focused_.MuiOutlinedInput-notchedOutline]:!border-0 [&_.MuiSelect-icon]:!text-text-primary/60`}
-              MenuProps={{
-                slotProps: {
-                  paper: {
-                    className:
-                      "hide-scrollbar !bg-bg-hover !text-text-primary !border !border-primary/15 !rounded-lg",
-                  },
-                },
-              }}
-            >
-              <MenuItem
-                value="All Payments"
-                className={`hover:!bg-secondary/4 !transition !duration-100 !text-[13px] !py-1 capitalize [&.Mui-selected]:!bg-primary/70 [&.Mui-selected:hover]:!bg-primary/70`}
-              >
-                All Payments
-              </MenuItem>
-            
-              <MenuItem
-                value="Pending"
-                className={`hover:!bg-secondary/4 !transition !duration-100 !text-[13px] !py-1 capitalize [&.Mui-selected]:!bg-primary/70 [&.Mui-selected:hover]:!bg-primary/70`}
-              >
-                Pending
-              </MenuItem>
-            
-              <MenuItem
-                value="Paid"
-                className={`hover:!bg-secondary/4 !transition !duration-100 !text-[13px] !py-1 capitalize [&.Mui-selected]:!bg-primary/70 [&.Mui-selected:hover]:!bg-primary/70`}
-              >
-                Paid
-              </MenuItem>
-            
-              <MenuItem
-                value="Failed"
-                className={`hover:!bg-secondary/4 !transition !duration-100 !text-[13px] !py-1 capitalize [&.Mui-selected]:!bg-primary/70 [&.Mui-selected:hover]:!bg-primary/70`}
-              >
-                Failed
-              </MenuItem>
-            </Select>
-            
-            <Select
-              id="method"
-              value={searchFormData.method}
-              onChange={(e) =>
-                searchOrderHandler({ ...searchFormData, method: e.target.value })
-              }
-              displayEmpty
-              className={`!min-w-[50px] !grow !h-10.5 !bg-info-bg/25 !text-sm !text-text-primary/85 capitalize !rounded-md !outline-none !transition-all !duration-200 [&_.MuiOutlinedInput-notchedOutline]:!border [&_.MuiOutlinedInput-notchedOutline]:!border-border [&.Mui-focused]:!ring-2 [&.Mui-focused]:!ring-primary/30 dark:[&.Mui-focused]:!ring-primary/70 [&.Mui-focused_.MuiOutlinedInput-notchedOutline]:!border-0 [&_.MuiSelect-icon]:!text-text-primary/60`}
-              MenuProps={{
-                slotProps: {
-                  paper: {
-                    className:
-                      "hide-scrollbar !bg-bg-hover !text-text-primary !border !border-primary/15 !rounded-lg",
-                  },
-                },
-              }}
-            >
-              <MenuItem
-                value="All Methods"
-                className={`hover:!bg-secondary/4 !transition !duration-100 !text-[13px] !py-1 capitalize [&.Mui-selected]:!bg-primary/70 [&.Mui-selected:hover]:!bg-primary/70`}
-              >
-                All Methods
-              </MenuItem>
-            
-              <MenuItem
-                value="Cash"
-                className={`hover:!bg-secondary/4 !transition !duration-100 !text-[13px] !py-1 capitalize [&.Mui-selected]:!bg-primary/70 [&.Mui-selected:hover]:!bg-primary/70`}
-              >
-                Cash
-              </MenuItem>
-            
-              <MenuItem
-                value="Stripe"
-                className={`hover:!bg-secondary/4 !transition !duration-100 !text-[13px] !py-1 capitalize [&.Mui-selected]:!bg-primary/70 [&.Mui-selected:hover]:!bg-primary/70`}
-              >
-                Stripe
-              </MenuItem>
-            </Select>
+          <Select
+            id="status"
+            value={searchFormData.status}
+            onChange={(e) =>
+              searchOrderHandler({ ...searchFormData, status: e.target.value })
+            }
+            menuItems={[
+              "All Statuses",
+              "Pending",
+              "Confirmed",
+              "Processing",
+              "Shipped",
+              "Delivered",
+              "Cancelled",
+              "Returned",
+            ]}
+          ></Select>
+
+          <Select
+            id="payment"
+            value={searchFormData.payment}
+            onChange={(e) =>
+              searchOrderHandler({ ...searchFormData, payment: e.target.value })
+            }
+            menuItems={["All Payments", "Pending", "Paid", "Failed"]}
+          ></Select>
+
+          <Select
+            id="method"
+            value={searchFormData.method}
+            onChange={(e) =>
+              searchOrderHandler({ ...searchFormData, method: e.target.value })
+            }
+            menuItems={["All Methods", "Cash", "Stripe"]}
+          ></Select>
         </div>
       </div>
     </div>

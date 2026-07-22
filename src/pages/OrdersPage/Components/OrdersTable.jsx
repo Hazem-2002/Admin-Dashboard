@@ -1,12 +1,12 @@
 import React from "react";
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Avatar, Pagination, PaginationItem } from "@mui/material";
 import OrdersTableSkeleton from "./OrdersTableSkeleton";
 import { getAllOrdersThunk } from "../../../features/orders/Thunks/GetAllOrdersThunk";
 import OrderDetialsDrawer from "./OrderDetialsDrawer";
 
-const OrdersTable = ({ numberOfItems, changeOrdersNumber }) => {
+const OrdersTable = ({ maxHeight, numberOfItems }) => {
   const getOrdersDispatch = useDispatch();
   const [isPagination, setIsPagination] = useState(false);
   const { filteredOrders, totalPages, currentPage, loading } = useSelector(
@@ -14,31 +14,7 @@ const OrdersTable = ({ numberOfItems, changeOrdersNumber }) => {
   );
 
   const [openOrderDetialsDrawer, setOpenOrderDetialsDrawer] = useState(false);
-
-  // Cell Height in Table of Users
-  const [maxHeight, setMaxHeight] = useState(0);
-  const th = useRef(null);
-  const td = useRef(null);
-  const tf = useRef(null);
-
   const [selectedOrder, setSelectedOrder] = useState({});
-
-  // Dynamic max height calculation to fit full table rows without clipping
-  useEffect(() => {
-    if (!filteredOrders?.length || !td.current || !th.current) return;
-
-    const rowHeight = td.current.getBoundingClientRect().height;
-    const headerHeight = th.current.getBoundingClientRect().height;
-    const footerHeight = tf.current.getBoundingClientRect().height;
-
-    const itemsCount = Math.floor((window.innerHeight * 0.85) / rowHeight) - 1;
-
-    setMaxHeight(itemsCount * rowHeight + headerHeight + footerHeight);
-
-    changeOrdersNumber(itemsCount);
-
-    /* eslint-disable react-hooks/exhaustive-deps */
-  }, [filteredOrders]);
 
   const paginationHandler = (_, value) => {
     const fetchOrders = async () => {
@@ -71,10 +47,10 @@ const OrdersTable = ({ numberOfItems, changeOrdersNumber }) => {
       >
         {!loading ? (
           <table
-            className={`min-w-[800px] xl:min-w-full w-full border-separate border-spacing-0 ${!maxHeight ? "invisible" : "visible"}`}
+            className={`min-w-[800px] xl:min-w-full w-full border-separate border-spacing-0`}
           >
-            <thead className="sticky top-0 z-10 bg-bg-main text-text-primary/85">
-              <tr ref={th} className="bg-secondary/13 dark:bg-secondary/20">
+            <thead className="!h-[48px] sticky top-0 z-10 bg-bg-main text-text-primary/85">
+              <tr className="bg-secondary/13 dark:bg-secondary/20">
                 <th className="uppercase py-4 px-6 text-start text-xs">
                   order
                 </th>
@@ -100,9 +76,8 @@ const OrdersTable = ({ numberOfItems, changeOrdersNumber }) => {
               {filteredOrders?.length > 0 ? (
                 filteredOrders?.map((order, index, array) => (
                   <tr
-                    ref={index === 0 ? td : null}
                     key={order._id}
-                    className="hover:bg-secondary/3 transition cursor-pointer"
+                    className="!h-[77px] hover:bg-secondary/3 transition cursor-pointer"
                     onClick={() => orderClickHandler(order)}
                   >
                     {/* Order */}
@@ -245,8 +220,8 @@ const OrdersTable = ({ numberOfItems, changeOrdersNumber }) => {
               )}
             </tbody>
 
-            <tfoot className="sticky bottom-0 z-10 !bg-bg-main">
-              <tr ref={tf} className="bg-secondary/8 dark:bg-secondary/16">
+            <tfoot className="!h-[52px] sticky bottom-0 z-10 !bg-bg-main">
+              <tr className="bg-secondary/8 dark:bg-secondary/16">
                 <td colSpan={6} className="py-2.5 px-6">
                   {/* {filteredOrders.length > 0 ? ( */}
                   <div className="flex justify-between items-center">
@@ -270,7 +245,7 @@ const OrdersTable = ({ numberOfItems, changeOrdersNumber }) => {
         ) : isPagination && loading ? (
           <OrdersTableSkeleton numberOfItems={numberOfItems}>
             <tfoot className="sticky bottom-0 z-10 !bg-bg-main">
-              <tr ref={tf} className="bg-secondary/8 dark:bg-secondary/16">
+              <tr className="bg-secondary/8 dark:bg-secondary/16">
                 <td colSpan={6} className="py-2.5 px-6">
                   <div className="flex justify-between items-center">
                     <p className="text-xs text-text-primary/80">{`Page ${currentPage} of ${totalPages}`}</p>

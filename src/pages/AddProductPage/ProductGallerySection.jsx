@@ -11,7 +11,7 @@ const ProductGallerySection = ({
   return (
     <div className="flex flex-col p-5 gap-6 bg-bg-card rounded-3xl shadow border border-border">
       <div className="flex items-start gap-3">
-        <div className="p-2.5 bg-accent/15 text-accent backdrop-blur rounded-2xl shrink-0">
+        <div className="p-2 sm:p-2.5 bg-primary/7 text-primary/70 backdrop-blur rounded-2xl shrink-0">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="24"
@@ -22,7 +22,7 @@ const ProductGallerySection = ({
             strokeWidth="2"
             strokeLinecap="round"
             strokeLinejoin="round"
-            className="lucide lucide-image-plus-icon lucide-image-plus size-7"
+            className="lucide lucide-image-plus-icon lucide-image-plus size-5.5 sm:size-7"
           >
             <path d="M16 5h6" />
             <path d="M19 2v6" />
@@ -31,9 +31,10 @@ const ProductGallerySection = ({
             <circle cx="9" cy="9" r="2" />
           </svg>
         </div>
+
         <div className="flex flex-col">
-          <h3 className="font-bold text-text-primary text-lg">Gallery</h3>
-          <p className="capitalize text-text-secondary text-sm">
+          <h3 className="font-bold text-text-primary text-md sm:text-lg">Gallery</h3>
+          <p className="capitalize text-text-secondary text-xs sm:text-sm">
             Upload multiple images and preview instantly.
           </p>
         </div>
@@ -61,7 +62,7 @@ const ProductGallerySection = ({
                 className="h-28 w-full object-cover"
               />
 
-              <p className="px-3 py-2 text-xs uppercase tracking-[0.2rem]">
+              <p className="px-3 py-2 text-[11px] sm:text-xs uppercase tracking-[0.2rem]">
                 Image {index + 1}
               </p>
             </div>
@@ -74,7 +75,7 @@ const ProductGallerySection = ({
               className="h-28 w-full object-cover"
             />
 
-            <p className="px-3 py-2 text-xs uppercase tracking-[0.2rem]">
+            <p className="px-3 py-2 text-[11px] sm:text-xs uppercase tracking-[0.2rem]">
               Image 1
             </p>
           </div>
@@ -84,7 +85,7 @@ const ProductGallerySection = ({
       {/* Upload Image */}
       <label
         htmlFor="images"
-        className=" flex flex-col gap-2.5 p-8 items-center justify-center text-center w-full rounded-3xl border-2 border-dashed border-accent/20 bg-accent/3 cursor-pointer transition-all duration-200 hover:border-accent/25 hover:bg-accent/5"
+        className=" flex flex-col gap-2.5 p-8 items-center justify-center text-center w-full rounded-3xl border-2 border-dashed border-primary/15 bg-primary/3 cursor-pointer transition-all duration-200 hover:border-primary/18 hover:bg-primary/5"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -96,7 +97,7 @@ const ProductGallerySection = ({
           strokeWidth="2"
           strokeLinecap="round"
           strokeLinejoin="round"
-          className="lucide lucide-image-plus-icon lucide-image-plus text-accent"
+          className="lucide lucide-image-plus-icon lucide-image-plus text-primary/80"
         >
           <path d="M16 5h6" />
           <path d="M19 2v6" />
@@ -105,9 +106,9 @@ const ProductGallerySection = ({
           <circle cx="9" cy="9" r="2" />
         </svg>
 
-        <h3 className="text-lg text-text-primary">Upload images</h3>
+        <h3 className="text-md sm:text-lg text-text-primary">Upload images</h3>
 
-        <p className="text-sm text-text-secondary">
+        <p className="text-xs sm:text-sm text-text-secondary">
           PNG, JPG, WEBP • multiple files supported
         </p>
 
@@ -125,8 +126,8 @@ const ProductGallerySection = ({
         <p className="text-red-400 text-xs -mt-2">{errors.images}</p>
       )}
 
-      <div className="flex flex-col gap-1 p-4 bg-accent/7 border border-accent/15 rounded-3xl">
-        <div className="flex gap-2 items-center text-accent/80">
+      <div className="flex flex-col gap-1 p-4 bg-primary/4 border border-primary/10 rounded-3xl">
+        <div className="flex gap-2 items-center text-primary/80">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="24"
@@ -137,16 +138,16 @@ const ProductGallerySection = ({
             strokeWidth="2"
             strokeLinecap="round"
             strokeLinejoin="round"
-            className="lucide lucide-sparkles-icon lucide-sparkles size-4"
+            className="lucide lucide-sparkles-icon lucide-sparkles size-3.5 sm:size-4"
           >
             <path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z" />
             <path d="M20 2v4" />
             <path d="M22 4h-4" />
             <circle cx="4" cy="20" r="2" />
           </svg>
-          <span className="font-semibold text-sm">Senior UX</span>
+          <span className="font-semibold text-xs sm:text-sm">Senior UX</span>
         </div>
-        <p className="text-xs text-accent/85 dark:text-accent/70">
+        <p className="text-[11px] sm:text-xs text-primary/85 dark:text-primary/55">
           Optimized product creation experience with responsive design and
           smooth interactions.
         </p>

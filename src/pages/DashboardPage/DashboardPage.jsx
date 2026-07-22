@@ -11,7 +11,7 @@ const DashboardPage = () => {
         "https://e-commerce-api-3wara.vercel.app/orders/admin/dashboard",
         {
           headers: {
-            Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhN…Dk1fQ.8c5Yg22PLOm8ljL40qptA9vavT7_1WJGLIIamjMriac`,
+            Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhNWZjYjczNDQzMTFkYzY1YTdkZDU0MiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc4NDcyNjU3OCwiZXhwIjoxNzg1MTU4NTc4fQ.j_9ejdNMk-BQuunMfrAYKkDAXMN8KgJSzPtudzu47dc`,
           },
         },
       );
