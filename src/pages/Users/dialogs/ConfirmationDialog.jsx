@@ -1,12 +1,14 @@
+import React from "react";
+import { useState } from "react";
+
+import Button from "../../../components/Button";
 import {
   Dialog,
   DialogTitle,
   DialogContent,
   DialogContentText,
   DialogActions,
-  Button,
 } from "@mui/material";
-import { useState } from "react";
 
 const ConfirmationDialog = ({
   open,
@@ -16,7 +18,7 @@ const ConfirmationDialog = ({
   message,
   confirmText = "Confirm",
   cancelText = "Cancel",
-  confirmButtonColor = "!bg-success",
+  confirmButtonColor = "!bg-blue-500",
 }) => {
   const [loading, setLoading] = useState(false);
 
@@ -40,7 +42,7 @@ const ConfirmationDialog = ({
 
         paper: {
           className:
-            "!bg-bg-card !border !border-border !rounded-3xl !max-h-[80vh] !w-screen sm:!w-[35vw]",
+            "!bg-bg-card !border !border-border !rounded-2xl !max-h-[80vh] !w-screen sm:!w-[35vw]",
         },
       }}
       disableScrollLock
@@ -50,32 +52,30 @@ const ConfirmationDialog = ({
       </DialogTitle>
 
       <DialogContent>
-        <DialogContentText className="!text-text-primary/70 !text-sm">
+        <DialogContentText className="!text-text-primary/85 dark:!text-text-muted/95 !text-sm">
           {message}
         </DialogContentText>
       </DialogContent>
 
       <DialogActions className="!px-4 !pb-4">
         <Button
+          text={cancelText}
           onClick={onClose}
-          disabled={loading}
-          variant="text"
-          className="!text-black dark:!text-white/80 hover:!bg-transparent !rounded-md"
-        >
-          {cancelText}
-        </Button>
+          loading={loading}
+          variant="secondary"
+        />
 
         <Button
+          text={confirmText}
           loading={loading}
           variant="contained"
           onClick={confirmHandler}
           className={`${confirmButtonColor} !font-semibold !rounded-md`}
-        >
-          {confirmText}
-        </Button>
+        />
+
       </DialogActions>
     </Dialog>
   );
 };
 
-export default ConfirmationDialog;
+export default React.memo(ConfirmationDialog);

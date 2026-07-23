@@ -1,15 +1,26 @@
 import React from "react";
 import { useState } from "react";
+import { useDispatch } from "react-redux";
 
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import CreateUserCollapse from "./CreateUserCollapse";
 
+import { searchUser } from "../../../features/users/usersSlice";
+
 import Button from "../../../components/Button";
 import Input from "../../../components/Input";
 
-const ProductsPageHeader = ({ inputSearch, handleSearch }) => {
+const ProductsPageHeader = () => {
   const [openCollapse, setOpenCollapse] = useState(false);
+  const [searchInput, setSearchInput] = useState("");
+  const dispatch = useDispatch();
+
+  const searchHandler = (e) => {
+    const value = e.target.value;
+    setSearchInput(value);
+    dispatch(searchUser(value));
+  };
 
   return (
     <>
@@ -28,8 +39,8 @@ const ProductsPageHeader = ({ inputSearch, handleSearch }) => {
             <div className="grow flex items-center">
               <Input
                 placeholder="Search users..."
-                value={inputSearch}
-                onChange={(e) => handleSearch(e.target.value)}
+                value={searchInput}
+                onChange={searchHandler}
                 icon={true}
                 className="!h-11.5"
               />
@@ -66,6 +77,7 @@ const ProductsPageHeader = ({ inputSearch, handleSearch }) => {
                   <KeyboardArrowDownIcon />
                 )
               }
+              className="!h-10 lg:!h-11"
             />
           </div>
         </div>

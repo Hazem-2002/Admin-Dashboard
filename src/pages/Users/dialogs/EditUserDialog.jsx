@@ -1,7 +1,12 @@
-import { Dialog, DialogTitle, DialogContent, IconButton } from "@mui/material";
-import CloseIcon from "@mui/icons-material/Close";
+import React from "react";
 import { useState } from "react";
-import Button from "../components/Button";
+
+import { Dialog, DialogTitle, DialogContent, IconButton } from "@mui/material";
+import Button from "../../../components/Button";
+import Input from "../../../components/Input";
+import Label from "../../../components/Label";
+
+import CloseIcon from "@mui/icons-material/Close";
 
 const EditUserDialog = ({
   open,
@@ -81,14 +86,14 @@ const EditUserDialog = ({
     >
       {/* Header */}
       <div className="flex items-center justify-between px-6 pt-6">
-        <DialogTitle className="!p-0 !text-2xl !font-bold !text-secondary dark:!text-text-primary/95">
+        <DialogTitle className="!p-0 !text-2xl !font-bold !text-text-primary">
           {title}
         </DialogTitle>
 
         <IconButton
           onClick={closeHandler}
           disabled={loading}
-          className="!text-secondary/80 hover:!text-secondary"
+          className="!text-text-primary/35 hover:!text-text-primary/50 transition"
         >
           <CloseIcon />
         </IconButton>
@@ -97,15 +102,9 @@ const EditUserDialog = ({
       <DialogContent className="!px-6 !pb-6">
         <form onSubmit={confirmHandler}>
           {/* Username */}
-          <div>
-            <label
-              htmlFor="username"
-              className="mb-2 block text-xs font-bold uppercase tracking-wider text-secondary/75 dark:text-secondary/90"
-            >
-              Username
-            </label>
-
-            <input
+          <div className="flex flex-col gap-2">
+            <Label htmlFor="username" value="Username" />
+            <Input
               value={formData.username}
               onChange={(e) =>
                 setFormData({ ...formData, username: e.target.value })
@@ -113,7 +112,6 @@ const EditUserDialog = ({
               id="username"
               name="username"
               type="text"
-              className="w-full bg-info-bg/25 py-3 px-4 text-sm text-text-primary placeholder:text-text-muted/50 border border-border rounded-full outline-0 focus:ring-2 focus:ring-primary/30 dark:focus:ring-primary/70 transition-all duration-200"
             />
 
             <p className="mt-1 text-sm text-red-400 min-h-[20px]">
@@ -122,15 +120,13 @@ const EditUserDialog = ({
           </div>
 
           {/* Phone */}
-          <div>
-            <label
+          <div className="flex flex-col gap-2">
+            <Label
               htmlFor="phone"
-              className="mb-2 block text-xs font-bold uppercase tracking-wider text-secondary/75 dark:text-secondary/90"
-            >
-              Phone
-            </label>
-
-            <input
+              value="Phone"
+              className="mb-2 block text-xs font-bold uppercase tracking-wider text-slate-500/80 dark:text-slate-400"
+            />
+            <Input
               value={formData.phone}
               onChange={(e) =>
                 setFormData({ ...formData, phone: e.target.value })
@@ -138,24 +134,16 @@ const EditUserDialog = ({
               id="phone"
               name="phone"
               type="text"
-              className="w-full bg-info-bg/25 py-3 px-4 text-sm text-text-primary placeholder:text-text-muted/50 border border-border rounded-full outline-0 focus:ring-2 focus:ring-primary/30 dark:focus:ring-primary/70 transition-all duration-200"
             />
-
             <p className="mt-1 text-sm text-red-400 min-h-[20px]">
               {errors.phone || ""}
             </p>
           </div>
 
           {/* Avatar */}
-          <div>
-            <label
-              htmlFor="avatar"
-              className="mb-2 block text-xs font-bold uppercase tracking-wider text-secondary/75 dark:text-secondary/90"
-            >
-              Avatar URL
-            </label>
-
-            <input
+          <div className="flex flex-col gap-2">
+            <Label htmlFor="avatar" value="Avatar URL" />
+            <Input
               value={formData.avatar}
               onChange={(e) =>
                 setFormData({ ...formData, avatar: e.target.value })
@@ -163,9 +151,7 @@ const EditUserDialog = ({
               id="avatar"
               name="avatar"
               type="url"
-              className="w-full bg-info-bg/25 py-3 px-4 text-sm text-text-primary placeholder:text-text-muted/50 border border-border rounded-full outline-0 focus:ring-2 focus:ring-primary/30 dark:focus:ring-primary/70 transition-all duration-200"
             />
-
             <p className="mt-1 text-sm text-red-400 min-h-[20px]">
               {errors.avatar || ""}
             </p>
@@ -175,19 +161,19 @@ const EditUserDialog = ({
           <div className="flex justify-end gap-3 pt-3">
             <Button
               type="button"
+              variant="secondary"
               text="Cancel"
               onClick={closeHandler}
-              variant="secondary"
-              className="!bg-red-500 !text-white"
+              loading={loading}
             />
 
             <Button
               type="submit"
-              disabled={loading}
-              className="!capitalize !font-semibold !rounded-full !px-4 !py-2.5 !bg-primary/80 hover:!bg-primary-hover/70 disabled:!opacity-70 !text-white !flex !items-center !gap-2"
-            >
-              {loading ? "Saving..." : "Save Changes"}
-            </Button>
+              text="Save Changes"
+              loadingText="Saving"
+              variant="primary"
+              loading={loading}
+            />
           </div>
         </form>
       </DialogContent>
@@ -195,4 +181,4 @@ const EditUserDialog = ({
   );
 };
 
-export default EditUserDialog;
+export default React.memo(EditUserDialog);

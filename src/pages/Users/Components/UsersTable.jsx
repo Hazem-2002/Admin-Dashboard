@@ -9,15 +9,17 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { deleteUserThunk } from "../../../features/users/Thunks/DeleteUserThunk";
 import { editUserThunk } from "../../../features/users/Thunks/EditUserThunk";
 import { changeUserRoleThunk } from "../../../features/users/Thunks/ChangeUserRoleThunk";
+import { logout } from "../../../features/auth/authSlice.js";
 import { showToast } from "../../../features/Toast/toastSlice.js";
+import ConfirmationDialog from "../dialogs/ConfirmationDialog.jsx";
+import EditUserDialog from "../dialogs/EditUserDialog";
+import Pagination from "./Pagination.jsx";
+import UsersTableSkeleton from "./UsersTableSkeleton.jsx";
 
-import ConfirmationDialog from "../../../dialogs/ConfirmationDialog.jsx";
-import EditUserDialog from "../../../dialogs/EditUserDialog";
-
-const UsersTable = ({ inputSearch }) => {
-  const toastDispatch = useDispatch();
-  const usersDispatch = useDispatch();
-  const { users } = useSelector((store) => store.users);
+const UsersTable = () => {
+  const dispatch = useDispatch();
+  const { paginationUsers, loading } = useSelector((store) => store.users);
+  const { email } = useSelector((store) => store.auth);
 
   // Confirmation Dialog Data
   const [confirmationDialogData, setConfirmationDialogData] = useState({
@@ -44,6 +46,7 @@ const UsersTable = ({ inputSearch }) => {
   const calcTableHeight = () => {
     const rowHeight = 81;
     const headerHeight = 56;
+    const footerHeight = 52;
 
     const itemsCount =
       Math.floor(
@@ -52,7 +55,7 @@ const UsersTable = ({ inputSearch }) => {
           : screen.availHeight * 0.7) / rowHeight,
       ) - 1;
 
-    return itemsCount * rowHeight + headerHeight;
+    return itemsCount * rowHeight + headerHeight + footerHeight;
   };
 
   const editUserHandler = (id, values) => {
@@ -62,15 +65,15 @@ const UsersTable = ({ inputSearch }) => {
 
       onConfirm: async (formData) => {
         try {
-          await usersDispatch(editUserThunk({ id, formData })).unwrap();
-          toastDispatch(
+          await dispatch(editUserThunk({ id, formData })).unwrap();
+          dispatch(
             showToast({
               message: "User updated successfully!",
               severity: "success",
             }),
           );
         } catch (error) {
-          toastDispatch(
+          dispatch(
             showToast({
               message: error || "Failed to update user",
               severity: "error",
@@ -85,7 +88,7 @@ const UsersTable = ({ inputSearch }) => {
     setOpenEditUserDialog(true);
   };
 
-  const deleteUserHandler = (id) => {
+  const deleteUserHandler = (id, userEmail) => {
     setConfirmationDialogData({
       id,
       title: "Delete User",
@@ -95,30 +98,49 @@ const UsersTable = ({ inputSearch }) => {
 
       action: async () => {
         try {
-          await usersDispatch(deleteUserThunk(id)).unwrap();
-          toastDispatch(
+          await dispatch(deleteUserThunk(id)).unwrap();
+
+          dispatch(
             showToast({
               message: "User deleted successfully!",
               severity: "success",
             }),
           );
+
+          if (email === userEmail) {
+            dispatch(
+              showToast({
+                message:
+                  "Your account has been deleted. You have been signed out.",
+                severity: "warning",
+              }),
+            );
+
+            await dispatch(logout());
+            return;
+          }
         } catch (error) {
-          toastDispatch(
+          console.error(error);
+
+          dispatch(
             showToast({
-              message: error || "Failed to delete user",
+              message:
+                typeof error === "string"
+                  ? error
+                  : error?.message || "Failed to delete user.",
               severity: "error",
             }),
           );
+        } finally {
+          setOpenConfirmationDialog(false);
         }
-
-        setOpenConfirmationDialog(false);
       },
     });
 
     setOpenConfirmationDialog(true);
   };
 
-  const changeUserRoleHandler = (id, role) => {
+  const changeUserRoleHandler = ({ id, role, userEmail }) => {
     setConfirmationDialogData({
       id,
       title: "Change User Role",
@@ -128,38 +150,48 @@ const UsersTable = ({ inputSearch }) => {
 
       action: async () => {
         try {
-          await usersDispatch(
+          await dispatch(
             changeUserRoleThunk({
               userId: id,
               role,
             }),
           ).unwrap();
 
-          toastDispatch(
+          if (userEmail === email && role === "customer") {
+            dispatch(
+              showToast({
+                message:
+                  "Your role has been changed to Customer. You have been signed out.",
+                severity: "warning",
+              }),
+            );
+
+            await dispatch(logout());
+            return;
+          }
+
+          dispatch(
             showToast({
-              message: "User role updated successfully!",
+              message: `User role updated to ${role} successfully!`,
               severity: "success",
             }),
           );
         } catch (error) {
-          toastDispatch(
+          console.log(error);
+          dispatch(
             showToast({
-              message: error || "Failed to change user role",
+              message: "Failed to change user role",
               severity: "error",
             }),
           );
+        } finally {
+          setOpenConfirmationDialog(false);
         }
-
-        setOpenConfirmationDialog(false);
       },
     });
 
     setOpenConfirmationDialog(true);
   };
-
-  const filteredUsers = users?.filter((user) =>
-    user?.username?.toLowerCase().includes(inputSearch.toLowerCase()),
-  );
 
   return (
     <div
@@ -168,25 +200,27 @@ const UsersTable = ({ inputSearch }) => {
     >
       <table className="min-w-[620px] sm:min-w-full border-separate border-spacing-0">
         <thead className="sticky top-0 z-10 !bg-gradient-to-r !from-primary-active !via-primary !to-primary-hover text-white/90 !h-[56px]">
-          <tr className="w-full h-full inset-0 bg-white/40 dark:bg-black/25">
-            <th className="py-4 px-6 text-left text-sm">User</th>
-            <th className="py-4 px-6 text-center text-sm">Role</th>
-            <th className="py-4 px-6 text-center text-sm">Verified</th>
-            <th className="py-4 px-6 text-center text-sm">Action</th>
+          <tr className="w-full h-full inset-0 bg-white/25 dark:bg-black/20">
+            <th className="py-4 px-6 text-left">User</th>
+            <th className="py-4 px-6 text-center">Role</th>
+            <th className="py-4 px-6 text-center">Verified</th>
+            <th className="py-4 px-6 text-center">Action</th>
           </tr>
         </thead>
 
         <tbody className="bg-secondary/1 dark:bg-bg-card">
-          {filteredUsers.length > 0 ? (
-            filteredUsers.map((user, index, array) => (
+          {loading ? (
+            <UsersTableSkeleton />
+          ) : paginationUsers.length > 0 ? (
+            paginationUsers.map((user, index, array) => (
               <tr
                 key={user._id}
-                className="hover:bg-secondary/3 transition !h-[81px]"
+                className="bg-bg-card hover:bg-bg-hover transition !h-[81px]"
               >
                 <td
                   className={`py-4 px-6 ${
                     index === array.length - 1 ? "" : "border-b"
-                  } border-secondary/15 dark:border-secondary/20`}
+                  } border-secondary/15 dark:border-secondary/20 w-[40%]`}
                 >
                   <div className="flex items-center gap-4">
                     <Avatar alt={user.username} src={user.avatar}>
@@ -202,7 +236,7 @@ const UsersTable = ({ inputSearch }) => {
                 <td
                   className={`py-4 px-6 text-center ${
                     index === array.length - 1 ? "" : "border-b"
-                  } border-secondary/15 dark:border-secondary/20`}
+                  } border-secondary/15 dark:border-secondary/20 w-[20%]`}
                 >
                   <span
                     className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[11px] font-semibold tracking-wide ring-1 transition-all duration-200 ${
@@ -224,7 +258,7 @@ const UsersTable = ({ inputSearch }) => {
                     user.isVerified ? "text-green-500" : "text-red-500"
                   } ${
                     index === array.length - 1 ? "" : "border-b"
-                  } border-secondary/15 dark:border-secondary/20`}
+                  } border-secondary/15 dark:border-secondary/20 w-[20%]`}
                 >
                   {user.isVerified ? "✅ Verified" : "❌ Not Verified"}
                 </td>
@@ -232,7 +266,7 @@ const UsersTable = ({ inputSearch }) => {
                 <td
                   className={`py-4 px-6 text-center ${
                     index === array.length - 1 ? "" : "border-b"
-                  } border-secondary/15 dark:border-secondary/20`}
+                  } border-secondary/15 dark:border-secondary/20 w-[20%]`}
                 >
                   <div className="flex justify-center items-center gap-3">
                     {/* Edit */}
@@ -292,10 +326,11 @@ const UsersTable = ({ inputSearch }) => {
                       <Button
                         className="!bg-green-600 !text-white hover:!bg-green-800 !min-w-0 !w-8 !h-8 !p-0 !flex !items-center !justify-center !rounded-xl"
                         onClick={() =>
-                          changeUserRoleHandler(
-                            user._id,
-                            user.role === "admin" ? "customer" : "admin",
-                          )
+                          changeUserRoleHandler({
+                            id: user._id,
+                            role: user.role === "admin" ? "customer" : "admin",
+                            userEmail: user.email,
+                          })
                         }
                       >
                         <CheckCircleIcon fontSize="small" />
@@ -324,7 +359,7 @@ const UsersTable = ({ inputSearch }) => {
                     >
                       <Button
                         className="!bg-red-600 hover:!bg-red-800 !text-white !min-w-0 !w-8 !h-8 !p-0 !flex !items-center !justify-center !rounded-xl"
-                        onClick={() => deleteUserHandler(user._id)}
+                        onClick={() => deleteUserHandler(user._id, user.email)}
                       >
                         <DeleteIcon fontSize="small" />
                       </Button>
@@ -337,13 +372,21 @@ const UsersTable = ({ inputSearch }) => {
             <tr>
               <td
                 colSpan={4}
-                className="text-slate-500/90 dark:text-slate-400/75 text-center p-8"
+                className="bg-bg-card/40 text-primary text-center p-8"
               >
                 No users found
               </td>
             </tr>
           )}
         </tbody>
+
+        <tfoot className="!h-[52px] sticky bottom-0 z-10 !bg-bg-main">
+          <tr className="dark:bg-secondary/15">
+            <td colSpan={6} className="py-2.5 px-6">
+              <Pagination />
+            </td>
+          </tr>
+        </tfoot>
       </table>
       <ConfirmationDialog
         key={`${confirmationDialogData.id}ConfirmationDialog`}

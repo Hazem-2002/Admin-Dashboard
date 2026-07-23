@@ -26,7 +26,7 @@ const CustomButton = ({
       type={type}
       onClick={onClick}
       disabled={loading}
-      className={`relative !py-2 !px-6 !min-w-0 !rounded-xl !capitalize !font-semibold !text-md !transition-all !duration-300 overflow-hidden group ${variants[variant]} ${className}`}
+      className={`relative !min-w-0 !rounded-xl !capitalize !font-semibold !text-md !transition-all !duration-300 overflow-hidden group ${variants[variant]} ${className}`}
       startIcon={
         text ? (
           loading ? (
@@ -46,8 +46,12 @@ const CustomButton = ({
       )}
 
       <span
-        className={`relative z-10 flex items-center justify-center gap-2 ${
-          variant === "primary" ? "text-white/90" : "text-text-secondary"
+        className={`relative z-10 flex items-center justify-center gap-2  ${
+          variant === "primary"
+            ? "!text-white/90"
+            : variant === "secondary"
+              ? "!text-text-primary/70"
+              : "text-white"
         }`}
       >
         {text

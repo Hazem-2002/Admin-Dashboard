@@ -225,7 +225,7 @@ const CreateUserCollapse = ({ openCollapse, setOpenCollapse }) => {
                 text="clear"
                 variant="secondary"
                 onClick={handleReset}
-                className="!rounded-xl !border !border-slate-400/30 dark:!border-slate-700/80 !px-3 !py-2 !font-medium !text-slate-500 dark:!text-slate-300 !transition hover:!bg-gray-400/10 dark:hover:!bg-slate-800/60 !capitalize"
+                className="!h-10"
               />
 
               <Button
