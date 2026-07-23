@@ -13,7 +13,9 @@ const ProductsPage = lazy(() => import("./pages/Products/ProductsPage"));
 const AddProductsPage = lazy(
   () => import("./pages/Products/add-product/addProductPage"),
 );
-const EditProductPage = lazy(() => import("./pages/Products/edit-product/EditProductPage"));
+const EditProductPage = lazy(
+  () => import("./pages/Products/edit-product/EditProductPage"),
+);
 const ViewProductPage = lazy(
   () => import("./pages/Products/view-product/viewProductPage"),
 );
@@ -22,10 +24,10 @@ const CartsPage = lazy(() => import("./pages/CartsPage"));
 const SettingsPage = lazy(() => import("./pages/SettingsPage"));
 const LoginPage = lazy(() => import("./pages/login/Login"));
 const ForgotPasswordPage = lazy(
-  () => import("./pages/Login/ForgotPasswordPage"),
+  () => import("./pages/login/ForgotPasswordPage"),
 );
 const VerifyResetOTPPage = lazy(
-  () => import("./pages/Login/VerifyResetOTPPage"),
+  () => import("./pages/login/VerifyResetOTPPage"),
 );
 
 // Toast
