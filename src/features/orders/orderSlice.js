@@ -19,6 +19,32 @@ const initialState = {
   error: null,
 };
 
+const filterOrders = (orders = [], filters) => {
+  const { input, status, payment, method } = filters;
+
+  const filteredOrders = orders.filter((order) => {
+    const methodMatch =
+      method === "All Methods" ||
+      order.paymentMethod.toLowerCase() === method.toLowerCase();
+
+    const paymentMatch =
+      payment === "All Payments" ||
+      order.paymentStatus.toLowerCase() === payment.toLowerCase();
+
+    const statusMatch =
+      status === "All Statuses" ||
+      order.status.toLowerCase() === status.toLowerCase();
+
+    const inputMatch =
+      !input ||
+      order.user?.username?.toLowerCase().includes(input.trim().toLowerCase());
+
+    return methodMatch && paymentMatch && statusMatch && inputMatch;
+  });
+
+  return filteredOrders;
+};
+
 const ordersSlice = createSlice({
   name: "orders",
   initialState,
@@ -32,31 +58,7 @@ const ordersSlice = createSlice({
 
     setFiltersOrders(state, action) {
       state.filters = action.payload;
-      console.log(action.payload);
-
-      const { input, status, payment, method } = action.payload;
-
-      state.filteredOrders = state.orders.filter((order) => {
-        const methodMatch =
-          method === "All Methods" ||
-          order.paymentMethod.toLowerCase() === method.toLowerCase();
-
-        const paymentMatch =
-          payment === "All Payments" ||
-          order.paymentStatus.toLowerCase() === payment.toLowerCase();
-
-        const statusMatch =
-          status === "All Statuses" ||
-          order.status.toLowerCase() === status.toLowerCase();
-
-        const inputMatch =
-          !input ||
-          order.user?.username
-            ?.toLowerCase()
-            .includes(input.trim().toLowerCase());
-
-        return methodMatch && paymentMatch && statusMatch && inputMatch;
-      });
+      state.filteredOrders = filterOrders(state.orders, state.filters);
     },
   },
 
@@ -78,30 +80,10 @@ const ordersSlice = createSlice({
         state.error = null;
 
         state.orders = action.payload.orders;
-
-        const { method, payment, status, input } = state.filters;
-
-        state.filteredOrders = state.orders.filter((order) => {
-          const methodMatch =
-            method === "All Methods" ||
-            order.paymentMethod.toLowerCase() === method.toLowerCase();
-
-          const paymentMatch =
-            payment === "All Payments" ||
-            order.paymentStatus.toLowerCase() === payment.toLowerCase();
-
-          const statusMatch =
-            status === "All Statuses" ||
-            order.status.toLowerCase() === status.toLowerCase();
-
-          const inputMatch =
-            !input ||
-            order.user?.username
-              ?.toLowerCase()
-              .includes(input.trim().toLowerCase());
-
-          return methodMatch && paymentMatch && statusMatch && inputMatch;
-        });
+        state.filteredOrders = filterOrders(
+          action.payload.orders,
+          state.filters,
+        );
 
         state.count = action.payload.total;
         state.totalPages = action.payload.totalPages;
@@ -133,6 +115,8 @@ const ordersSlice = createSlice({
         if (index !== -1) {
           state.orders[index] = updatedOrder;
         }
+
+        state.filteredOrders = filterOrders(state.orders, state.filters);
       })
       .addCase(updateOrderStatusThunk.rejected, (state, action) => {
         state.loading = false;

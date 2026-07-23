@@ -42,15 +42,15 @@ const OrdersTable = ({ maxHeight, numberOfItems }) => {
   return (
     <>
       <div
-        className="overflow-auto rounded-2xl border border-border shadow-lg hide-scrollbar dark:border-secondary/30"
+        className="overflow-auto rounded-2xl border border-border shadow hide-scrollbar dark:border-secondary/30"
         style={{ maxHeight: maxHeight ? `${maxHeight}px` : "auto" }}
       >
         {!loading ? (
           <table
             className={`min-w-[800px] xl:min-w-full w-full border-separate border-spacing-0`}
           >
-            <thead className="!h-[48px] sticky top-0 z-10 bg-bg-main text-text-primary/85">
-              <tr className="bg-secondary/13 dark:bg-secondary/20">
+            <thead className="sticky top-0 z-10 !bg-gradient-to-r !from-primary-active !via-primary !to-primary-hover text-white/90 !h-[56px]">
+              <tr className="w-full h-full inset-0 bg-white/40 dark:bg-black/25">
                 <th className="uppercase py-4 px-6 text-start text-xs">
                   order
                 </th>
@@ -269,7 +269,6 @@ const OrdersTable = ({ maxHeight, numberOfItems }) => {
           <OrdersTableSkeleton numberOfItems={numberOfItems} />
         )}
       </div>
-
       <OrderDetialsDrawer
         open={openOrderDetialsDrawer}
         onClose={closeDrawerHandler}

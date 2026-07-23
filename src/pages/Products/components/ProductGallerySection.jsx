@@ -1,13 +1,47 @@
-// import React from "react";
+import React from "react";
 import { IconButton } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
+import { v4 as uuidv4 } from "uuid";
 
 const ProductGallerySection = ({
   formData,
+  formDataChange,
   errors,
-  handleImagesChange,
-  handleRemoveImage,
+  errorsChange,
+  removedImages,
+  mode,
 }) => {
+  const handleImagesChange = (e) => {
+    const files = Array.from(e.target.files);
+
+    const imageFiles = files.map((file) => ({
+      id: uuidv4(),
+      file,
+      url: URL.createObjectURL(file),
+      isNew: true,
+    }));
+
+    formDataChange({
+      ...formData,
+      images: [...formData.images, ...imageFiles],
+    });
+
+    errorsChange({ ...errors, images: "" });
+  };
+
+  const handleRemoveImage = (id) => {
+    const image = formData.images.find((image) => image.id === id);
+
+    if (mode !== "add" && image && !image.isNew) {
+      removedImages.current.push(image.public_id);
+    }
+
+    formDataChange((prev) => ({
+      ...prev,
+      images: prev.images.filter((image) => image.id !== id),
+    }));
+  };
+
   return (
     <div className="flex flex-col p-5 gap-6 bg-bg-card rounded-3xl shadow border border-border">
       <div className="flex items-start gap-3">
@@ -33,7 +67,9 @@ const ProductGallerySection = ({
         </div>
 
         <div className="flex flex-col">
-          <h3 className="font-bold text-text-primary text-md sm:text-lg">Gallery</h3>
+          <h3 className="font-bold text-text-primary text-md sm:text-lg">
+            Gallery
+          </h3>
           <p className="capitalize text-text-secondary text-xs sm:text-sm">
             Upload multiple images and preview instantly.
           </p>
@@ -156,4 +192,4 @@ const ProductGallerySection = ({
   );
 };
 
-export default ProductGallerySection;
+export default React.memo(ProductGallerySection);

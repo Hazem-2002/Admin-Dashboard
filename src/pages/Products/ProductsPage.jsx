@@ -2,12 +2,12 @@ import React from "react";
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { getProductsThunk } from "../../features/products/Thunks/getAllProductsThunk";
-import QuickEditProductDialog from "./QuickEditProductDialog";
+import QuickEditProductDialog from "./quick-edit/QuickEditProduct";
 import { Pagination, PaginationItem } from "@mui/material";
 
-import ProductFilterSection from "./ProductFilterSection";
-import ProductCard from "./ProductCard";
-import ProductCardsSkeleton from "./ProductCardsSkeleton";
+import ProductFilterSection from "./components/ProductFilterSection";
+import ProductCard from "./components/ProductCard";
+import ProductCardsSkeleton from "./components/ProductCardsSkeleton";
 
 const ProductsPage = () => {
   const { products, filteredProducts, currentPage, totalPages, loading } =

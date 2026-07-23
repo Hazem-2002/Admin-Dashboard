@@ -4,7 +4,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, FreeMode, Thumbs, Autoplay } from "swiper/modules";
 import { useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { getProductByIdThunk } from "../../features/products/Thunks/GetSingleProductThunk";
+import { getProductByIdThunk } from "../../../features/products/Thunks/GetSingleProductThunk";
 import ViewProductPageSkeleton from "./ViewProductPageSkeleton";
 import { NavLink } from "react-router-dom";
 

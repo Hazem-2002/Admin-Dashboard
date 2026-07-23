@@ -1,12 +1,12 @@
 import React from "react";
 import { useState, useMemo } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { setFiltersProducts } from "../../features/products/productsSlice";
-import { getProductsThunk } from "../../features/products/Thunks/getAllProductsThunk";
+import { setFiltersProducts } from "../../../features/products/productsSlice";
+import { getProductsThunk } from "../../../features/products/Thunks/getAllProductsThunk";
 import { Button, Collapse } from "@mui/material";
 
-import Select from "../../components/Select";
-import Input from "../../components/Input";
+import Select from "../../../components/Select";
+import Input from "../../../components/Input";
 
 const ProductFilterSection = ({ searchData, setSearchData }) => {
   const [openCollapse, setOpenCollapse] = useState(false);
@@ -54,16 +54,16 @@ const ProductFilterSection = ({ searchData, setSearchData }) => {
     return [
       ...new Set([
         ...products.map((product) => product.category),
-        "Fashion",
-        "Electronics",
-        "Accessories",
-        "Jewelry",
-        "Watches",
-        "Bags",
-        "Shoes",
-        "Sports",
-        "Mobile",
-        "Laptops",
+        "fashion",
+        "electronics",
+        "accessories",
+        "jewelry",
+        "watches",
+        "bags",
+        "shoes",
+        "sports",
+        "mobile",
+        "laptops",
       ]),
     ];
   }, [products]);

@@ -163,16 +163,16 @@ const UsersTable = ({ inputSearch }) => {
 
   return (
     <div
-      className="overflow-auto rounded-2xl border border-border shadow-lg hide-scrollbar dark:border-secondary/30"
+      className="overflow-auto rounded-2xl border border-border shadow hide-scrollbar dark:border-secondary/30"
       style={{ maxHeight: `${calcTableHeight()}px` }}
     >
       <table className="min-w-[620px] sm:min-w-full border-separate border-spacing-0">
         <thead className="sticky top-0 z-10 !bg-gradient-to-r !from-primary-active !via-primary !to-primary-hover text-white/90 !h-[56px]">
-          <tr className="w-full h-full inset-0 bg-white/25 dark:bg-black/20">
-            <th className="py-4 px-6 text-left">User</th>
-            <th className="py-4 px-6 text-center">Role</th>
-            <th className="py-4 px-6 text-center">Verified</th>
-            <th className="py-4 px-6 text-center">Action</th>
+          <tr className="w-full h-full inset-0 bg-white/40 dark:bg-black/25">
+            <th className="py-4 px-6 text-left text-sm">User</th>
+            <th className="py-4 px-6 text-center text-sm">Role</th>
+            <th className="py-4 px-6 text-center text-sm">Verified</th>
+            <th className="py-4 px-6 text-center text-sm">Action</th>
           </tr>
         </thead>
 
@@ -181,7 +181,7 @@ const UsersTable = ({ inputSearch }) => {
             filteredUsers.map((user, index, array) => (
               <tr
                 key={user._id}
-                className="bg-bg-card hover:bg-bg-hover transition !h-[81px]"
+                className="hover:bg-secondary/3 transition !h-[81px]"
               >
                 <td
                   className={`py-4 px-6 ${

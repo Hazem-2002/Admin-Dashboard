@@ -1,17 +1,14 @@
 import React from "react";
-import {
-  Drawer,
-  IconButton,
-  Select,
-  MenuItem,
-  Button,
-  CircularProgress,
-} from "@mui/material";
-import { useDispatch } from "react-redux";
 import { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+
 import CloseIcon from "@mui/icons-material/Close";
 import { updateOrderStatusThunk } from "../../../features/orders/Thunks/UpdateOrderStatusThunk";
-import { useSelector } from "react-redux";
+
+import { Drawer, IconButton } from "@mui/material";
+import Select from "../../../components/Select";
+import TextArea from "../../../components/TextArea";
+import Button from "../../../components/Button";
 
 const OrderDetailsDrawer = ({ open, onClose, order }) => {
   const changeOrderStatusDispatch = useDispatch();
@@ -160,7 +157,7 @@ const OrderDetailsDrawer = ({ open, onClose, order }) => {
 
           <div className="flex flex-col gap-4 border border-secondary/15 rounded-md p-3">
             {order?.items?.map((item, index, array) => (
-              <div key={item} className="flex flex-col gap-2">
+              <div key={item + index} className="flex flex-col gap-2">
                 <div
                   className={`flex justify-between items-center ${array.length - 1 !== index ? "border-b border-secondary/15 pb-4" : ""}`}
                 >
@@ -260,68 +257,18 @@ const OrderDetailsDrawer = ({ open, onClose, order }) => {
             onChange={(e) => {
               setFormData({ ...formData, status: e.target.value });
             }}
-            displayEmpty
-            className={`!w-full !h-10.5 !bg-info-bg/25 !text-sm !text-text-primary/85 capitalize !rounded-md !outline-none !transition-all !duration-200 [&_.MuiOutlinedInput-notchedOutline]:!border [&_.MuiOutlinedInput-notchedOutline]:!border-border [&.Mui-focused]:!ring-2 [&.Mui-focused]:!ring-primary/30 dark:[&.Mui-focused]:!ring-primary/70 [&.Mui-focused_.MuiOutlinedInput-notchedOutline]:!border-0 [&_.MuiSelect-icon]:!text-text-primary/60`}
-            MenuProps={{
-              slotProps: {
-                paper: {
-                  className:
-                    "hide-scrollbar !bg-bg-hover !text-text-primary !border !border-primary/15 !rounded-lg",
-                },
-              },
-            }}
-          >
-            <MenuItem
-              value="pending"
-              className={`hover:!bg-secondary/4 !transition !duration-100 !text-[12px] !py-1 capitalize [&.Mui-selected]:!bg-primary/70 [&.Mui-selected:hover]:!bg-primary/70`}
-            >
-              pending
-            </MenuItem>
+            menuItems={[
+              "pending",
+              "confirmed",
+              "processing",
+              "shipped",
+              "delivered",
+              "cancelled",
+              "returned",
+            ]}
+          />
 
-            <MenuItem
-              value="confirmed"
-              className={`hover:!bg-secondary/4 !transition !duration-100 !text-[12px] !py-1 capitalize [&.Mui-selected]:!bg-primary/70 [&.Mui-selected:hover]:!bg-primary/70`}
-            >
-              confirmed
-            </MenuItem>
-
-            <MenuItem
-              value="processing"
-              className={`hover:!bg-secondary/4 !transition !duration-100 !text-[12px] !py-1 capitalize [&.Mui-selected]:!bg-primary/70 [&.Mui-selected:hover]:!bg-primary/70`}
-            >
-              processing
-            </MenuItem>
-
-            <MenuItem
-              value="shipped"
-              className={`hover:!bg-secondary/4 !transition !duration-100 !text-[12px] !py-1 capitalize [&.Mui-selected]:!bg-primary/70 [&.Mui-selected:hover]:!bg-primary/70`}
-            >
-              shipped
-            </MenuItem>
-
-            <MenuItem
-              value="delivered"
-              className={`hover:!bg-secondary/4 !transition !duration-100 !text-[12px] !py-1 capitalize [&.Mui-selected]:!bg-primary/70 [&.Mui-selected:hover]:!bg-primary/70`}
-            >
-              delivered
-            </MenuItem>
-
-            <MenuItem
-              value="cancelled"
-              className={`hover:!bg-secondary/4 !transition !duration-100 !text-[12px] !py-1 capitalize [&.Mui-selected]:!bg-primary/70 [&.Mui-selected:hover]:!bg-primary/70`}
-            >
-              cancelled
-            </MenuItem>
-
-            <MenuItem
-              value="returned"
-              className={`hover:!bg-secondary/4 !transition !duration-100 !text-[12px] !py-1 capitalize [&.Mui-selected]:!bg-primary/70 [&.Mui-selected:hover]:!bg-primary/70`}
-            >
-              returned
-            </MenuItem>
-          </Select>
-
-          <textarea
+          <TextArea
             rows={3}
             placeholder="Admin note (optional)..."
             value={formData.adminNote}
@@ -329,12 +276,13 @@ const OrderDetailsDrawer = ({ open, onClose, order }) => {
               setFormData({ ...formData, adminNote: e.target.value })
             }
             className="resize-none py-2 px-2.5 text-text-primary/85 !bg-info-bg/25 !text-sm border border-border outline-0 !rounded-md !outline-0 !transition-all !duration-200 focus:ring-2 focus:ring-primary/30 dark:focus:ring-primary/70 placeholder:text-text-muted/60"
-          ></textarea>
+          />
 
           <Button
-            variant="contained"
-            disabled={loading}
-            className="!bg-primary/80 hover:!bg-primary/65 !capitalize !rounded-md !text-white/90 !font-semibold"
+            text="save changes"
+            loadingText="saving"
+            variant="primary"
+            loading={loading}
             onClick={() =>
               changeOrderStatusHandler({
                 id: order._id,
@@ -342,15 +290,7 @@ const OrderDetailsDrawer = ({ open, onClose, order }) => {
                 adminNote: formData.adminNote,
               })
             }
-          >
-            <div className="flex gap-2 items-center">
-              {loading && (
-                <CircularProgress size={16} className="!text-white" />
-              )}
-
-              {loading ? "saving" : "save changes"}
-            </div>
-          </Button>
+          />
         </div>
       </div>
     </Drawer>

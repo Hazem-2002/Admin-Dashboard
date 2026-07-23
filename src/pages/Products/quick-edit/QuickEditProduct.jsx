@@ -2,9 +2,9 @@ import React from "react";
 import { Dialog, DialogTitle, DialogContent, IconButton } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 
-import AddProductPage from "../AddProductPage/ProductForm";
+import QuickEditProductForm from "./components/QuickEditProductForm";
 
-const QuickEditProductDialog = ({ open, onClose, product }) => {
+const QuickEditProduct = ({ open, onClose, product }) => {
   return (
     <Dialog
       open={open}
@@ -50,10 +50,10 @@ const QuickEditProductDialog = ({ open, onClose, product }) => {
 
       {/* Content */}
       <DialogContent className="!p-0 sm:!p-4 hide-scrollbar">
-        <AddProductPage product={product} onClose={onClose} />
+        <QuickEditProductForm product={product} onClose={onClose} />
       </DialogContent>
     </Dialog>
   );
 };
 
-export default React.memo(QuickEditProductDialog);
+export default React.memo(QuickEditProduct);

@@ -26,13 +26,16 @@ const CustomButton = ({
       type={type}
       onClick={onClick}
       disabled={loading}
-      className={`relative py-2.5 lg:!py-3 !px-6 !rounded-xl !capitalize !font-semibold !text-md !transition-all !duration-300 overflow-hidden group ${variants[variant]} ${className}`}
-
+      className={`relative !py-2 !px-6 !min-w-0 !rounded-xl !capitalize !font-semibold !text-md !transition-all !duration-300 overflow-hidden group ${variants[variant]} ${className}`}
       startIcon={
-        loading ? (
-          <CircularProgress size={18} className="!text-white/95" />
+        text ? (
+          loading ? (
+            <CircularProgress size={18} className="!text-white/95" />
+          ) : (
+            startIcon
+          )
         ) : (
-          startIcon
+          ""
         )
       }
       endIcon={!loading ? endIcon : null}
@@ -47,7 +50,13 @@ const CustomButton = ({
           variant === "primary" ? "text-white/90" : "text-text-secondary"
         }`}
       >
-        {loading ? (loadingText ? `${loadingText}...` : text) : text}
+        {text
+          ? loading
+            ? loadingText
+              ? `${loadingText}...`
+              : text
+            : text
+          : startIcon}
       </span>
     </Button>
   );

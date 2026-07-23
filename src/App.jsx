@@ -7,12 +7,17 @@ import { useEffect } from "react";
 // Layout
 const Layout = lazy(() => import("./Layout/Layout"));
 const ProtectedRoute = lazy(() => import("./Layout/ProtectedRoute"));
-const DashboardPage = lazy(() => import("./pages/DashboardPage/DashboardPage"));
-const UsersPage = lazy(() => import("./pages/UsersPage/UsersPage"));
-const ProductsPage = lazy(() => import("./pages/ProductsPage/ProductsPage"));
-const ProductForm = lazy(() => import("./pages/AddProductPage/ProductForm"));
-const ViewProductPage = lazy(() => import("./pages/ProductsPage/viewProductPage"));
-const OrdersPage = lazy(() => import("./pages/OrdersPage/OrdersPage"));
+const DashboardPage = lazy(() => import("./pages/Home/DashboardPage"));
+const UsersPage = lazy(() => import("./pages/Users/UsersPage"));
+const ProductsPage = lazy(() => import("./pages/Products/ProductsPage"));
+const AddProductsPage = lazy(
+  () => import("./pages/Products/add-product/addProductPage"),
+);
+const EditProductPage = lazy(() => import("./pages/Products/edit-product/EditProductPage"));
+const ViewProductPage = lazy(
+  () => import("./pages/Products/view-product/viewProductPage"),
+);
+const OrdersPage = lazy(() => import("./pages/Orders/OrdersPage"));
 const CartsPage = lazy(() => import("./pages/CartsPage"));
 const SettingsPage = lazy(() => import("./pages/SettingsPage"));
 const LoginPage = lazy(() => import("./pages/login/Login"));
@@ -69,8 +74,8 @@ function App() {
               <Route path="users" element={<UsersPage />} />
               <Route path="products" element={<ProductsPage />} />
               <Route path="products/view/:id" element={<ViewProductPage />} />
-              <Route path="products/edit/:id" element={<ProductForm />} />
-              <Route path="products/add" element={<ProductForm />} />
+              <Route path="products/edit/:id" element={<EditProductPage />} />
+              <Route path="products/add" element={<AddProductsPage />} />
               <Route path="orders" element={<OrdersPage />} />
               <Route path="carts" element={<CartsPage />} />
               <Route path="settings" element={<SettingsPage />} />
