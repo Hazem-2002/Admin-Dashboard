@@ -4,9 +4,10 @@ import axios from "axios";
 export const login = createAsyncThunk(
   "auth/login",
   async (loginData, thunkAPI) => {
-    console.log(loginData)
+    console.log(loginData);
+
     try {
-      const res = await axios.post("https://e-commerce-api-3wara.vercel.app/auth/login", loginData);
+      const res = await axios.post("/api/auth/login", loginData);
 
       const { user, token } = res.data;
 
@@ -17,7 +18,9 @@ export const login = createAsyncThunk(
         token,
       };
     } catch (error) {
-      return thunkAPI.rejectWithValue(error.response.data.message);
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || "Login failed",
+      );
     }
   },
 );

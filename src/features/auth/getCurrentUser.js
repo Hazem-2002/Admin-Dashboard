@@ -12,18 +12,17 @@ export const getCurrentUser = createAsyncThunk(
         return thunkAPI.rejectWithValue("No token");
       }
 
-      const response = await axios.get(
-        "https://e-commerce-api-3wara.vercel.app/auth/me",
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+      const response = await axios.get("/api/auth/me", {
+        headers: {
+          Authorization: `Bearer ${token}`,
         },
-      );
+      });
 
       return response.data.user;
     } catch (error) {
-      return thunkAPI.rejectWithValue(error.response.data);
+      return thunkAPI.rejectWithValue(
+        error.response?.data || "Failed to get user",
+      );
     }
   },
 );

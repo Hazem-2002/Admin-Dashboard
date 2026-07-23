@@ -7,15 +7,11 @@ export const changeUserRoleThunk = createAsyncThunk(
     try {
       const { token } = thunkAPI.getState().auth;
 
-      const response = await axios.patch(
-        "https://e-commerce-api-3wara.vercel.app/auth/change-role",
-        role,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+      const response = await axios.patch("/api/auth/change-role", role, {
+        headers: {
+          Authorization: `Bearer ${token}`,
         },
-      );
+      });
 
       return response.data;
     } catch (error) {

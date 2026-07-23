@@ -8,7 +8,7 @@ export const updateOrderStatusThunk = createAsyncThunk(
       const token = thunkAPI.getState().auth.token;
 
       const response = await axios.patch(
-        `https://e-commerce-api-3wara.vercel.app/orders/admin/${id}/status`,
+        `/api/orders/admin/${id}/status`,
         {
           status,
           adminNote,
@@ -19,7 +19,9 @@ export const updateOrderStatusThunk = createAsyncThunk(
           },
         },
       );
+
       console.log(response.data);
+
       return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(

@@ -7,20 +7,17 @@ export const getProductByIdThunk = createAsyncThunk(
     try {
       const { token } = thunkAPI.getState().auth;
 
-      const response = await axios.get(
-        `https://e-commerce-api-3wara.vercel.app/products/${id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await axios.get(`/api/products/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
       return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(
-        error.response?.data?.message || error.message
+        error.response?.data?.message || error.message,
       );
     }
-  }
+  },
 );

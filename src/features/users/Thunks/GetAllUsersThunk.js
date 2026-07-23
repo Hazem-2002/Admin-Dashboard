@@ -7,14 +7,11 @@ export const getAllUsersThunk = createAsyncThunk(
     try {
       const { token } = thunkAPI.getState().auth;
 
-      const response = await axios.get(
-        "https://e-commerce-api-3wara.vercel.app/users/all",
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+      const response = await axios.get("/api/users/all", {
+        headers: {
+          Authorization: `Bearer ${token}`,
         },
-      );
+      });
 
       return response.data;
     } catch (error) {
