@@ -1,24 +1,18 @@
 import React from "react";
-import { useEffect, useState } from "react";
-import axios from "axios";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { getDashboardDataThunk } from "../../features/dashboard/Thunks/getDashboardDataThunk";
 
 const DashboardPage = () => {
-  const [data, setData] = useState({});
-
+  const dispatch = useDispatch();
+  const { data } = useSelector((store) => store.dashboard);
   useEffect(() => {
-    const fetchData = async () => {
-      const products = await axios.get(
-        "https://e-commerce-api-3wara.vercel.app/orders/admin/dashboard",
-        {
-          headers: {
-            Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhNWZjYjczNDQzMTFkYzY1YTdkZDU0MiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc4NDcyNjU3OCwiZXhwIjoxNzg1MTU4NTc4fQ.j_9ejdNMk-BQuunMfrAYKkDAXMN8KgJSzPtudzu47dc`,
-          },
-        },
-      );
-      console.log(products.data);
-      setData(products.data);
-    };
-    fetchData();
+    try {
+      dispatch(getDashboardDataThunk());
+    } catch (error) {
+      console.log(error);
+    }
+    /* eslint-disable react-hooks/exhaustive-deps */
   }, []);
 
   return (

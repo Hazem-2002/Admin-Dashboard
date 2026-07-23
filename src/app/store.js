@@ -5,6 +5,7 @@ import toastReducer from "../features/Toast/toastSlice";
 import themeReducer from "../features/theme/themeSlice";
 import ordersReducer from "../features/orders/orderSlice";
 import productsReducer from "../features/products/productsSlice";
+import dashboardReducer from "../features/dashboard/dashboardSlice";
 
 export const store = configureStore({
   reducer: {
@@ -14,5 +15,6 @@ export const store = configureStore({
     products: productsReducer,
     toast: toastReducer,
     theme: themeReducer,
+    dashboard: dashboardReducer,
   },
 });
