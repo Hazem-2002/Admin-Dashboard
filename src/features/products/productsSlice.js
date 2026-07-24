@@ -8,6 +8,7 @@ const initialState = {
   products: [],
   product: null,
   filteredProducts: [],
+  paginationProducts: [],
   filters: {
     inputSearch: "",
     category: "All Categories",
@@ -16,9 +17,10 @@ const initialState = {
   loading: false,
   error: null,
   success: false,
+  limit: 2,
   totalPages: 1,
   currentPage: 1,
-  totalProducts: 1,
+  totalProducts: 0,
 };
 
 const filterProducts = (products = [], filters) => {
@@ -43,6 +45,23 @@ const filterProducts = (products = [], filters) => {
   });
 };
 
+const productsPaginationCalc = (products, page, limit = 10) => {
+  const paginationOrders = [];
+
+  const startIndex = (page - 1) * limit;
+  const endIndex = startIndex + limit;
+
+  for (let i = startIndex; i < endIndex && i < products.length; i++) {
+    paginationOrders.push(products[i]);
+  }
+
+  return paginationOrders;
+};
+
+const pagesCount = (count, limit = 10) => {
+  return Math.ceil(count / limit);
+};
+
 // =================== SLICE ===================
 const productsSlice = createSlice({
   name: "products",
@@ -57,8 +76,23 @@ const productsSlice = createSlice({
 
     setFiltersProducts(state, action) {
       state.filters = action.payload;
-
       state.filteredProducts = filterProducts(state.products, action.payload);
+      state.paginationProducts = productsPaginationCalc(
+        state.filteredProducts,
+        1,
+        state.limit,
+      );
+      state.currentPage = 1;
+      state.totalPages = pagesCount(state.filteredProducts.length, state.limit);
+    },
+
+    setPage(state, action) {
+      state.currentPage = action.payload;
+      state.paginationProducts = productsPaginationCalc(
+        state.filteredProducts,
+        state.currentPage,
+        state.limit,
+      );
     },
 
     resetFilteredProducts(state) {
@@ -79,14 +113,22 @@ const productsSlice = createSlice({
         state.error = null;
         state.success = true;
         state.loading = false;
+        state.limit = action.payload.productsPerPage;
         state.products = action.payload?.products;
-        state.totalPages = action.payload?.totalPages;
-        state.currentPage = action.payload?.currentPage;
-        state.totalProducts = action.payload?.totalProducts;
         state.filteredProducts = filterProducts(
           action.payload?.products,
           state.filters,
         );
+        state.paginationProducts = productsPaginationCalc(
+          state.filteredProducts,
+          state.currentPage,
+          state.limit,
+        );
+        state.totalPages = pagesCount(
+          state.filteredProducts?.length,
+          state.limit,
+        );
+        state.totalProducts = action.payload?.totalProducts;
       })
       .addCase(getProductsThunk.rejected, (state) => {
         state.success = false;
@@ -158,7 +200,11 @@ const productsSlice = createSlice({
   },
 });
 
-export const { clearStatus, setFiltersProducts, resetFilteredProducts } =
-  productsSlice.actions;
+export const {
+  clearStatus,
+  setFiltersProducts,
+  setPage,
+  resetFilteredProducts,
+} = productsSlice.actions;
 
 export default productsSlice.reducer;

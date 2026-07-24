@@ -2,6 +2,7 @@ import React from "react";
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { getProductsThunk } from "../../features/products/Thunks/getAllProductsThunk";
+import { setPage } from "../../features/products/productsSlice";
 import QuickEditProductDialog from "./quick-edit/QuickEditProduct";
 import { Pagination, PaginationItem } from "@mui/material";
 
@@ -10,10 +11,15 @@ import ProductCard from "./components/ProductCard";
 import ProductCardsSkeleton from "./components/ProductCardsSkeleton";
 
 const ProductsPage = () => {
-  const { products, filteredProducts, currentPage, totalPages, loading } =
-    useSelector((store) => store.products);
+  const {
+    filteredProducts,
+    paginationProducts,
+    currentPage,
+    totalPages,
+    loading,
+  } = useSelector((store) => store.products);
   const [open, setOpen] = useState(false);
-  const productsDispatch = useDispatch();
+  const dispatch = useDispatch();
   const [product, setProduct] = useState({});
 
   const [searchData, setSearchData] = useState({
@@ -30,11 +36,8 @@ const ProductsPage = () => {
   // Fetch products from API and set state on mount
   useEffect(() => {
     try {
-      productsDispatch(
-        getProductsThunk({
-          page: 1,
-        }),
-      ).unwrap();
+      const productsPerPage = 2;
+      dispatch(getProductsThunk(productsPerPage)).unwrap();
     } catch (error) {
       console.log(error);
     }
@@ -42,19 +45,11 @@ const ProductsPage = () => {
   }, []);
 
   const paginationHandler = (_, value) => {
-    const fetchOrders = async () => {
-      await productsDispatch(
-        getProductsThunk({
-          page: value,
-          // category:
-          //   searchData.category === "All Categories" ? "" : searchData.category,
-          // //   brand: params.brand,
-          // search: searchData.inputSearch,
-        }),
-      );
-    };
-    fetchOrders();
-    window.scrollTo(0, 0);
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+    dispatch(setPage(value));
   };
 
   return (
@@ -68,9 +63,9 @@ const ProductsPage = () => {
         {/* cards */}
         {!loading ? (
           <div className="flex flex-col gap-8">
-            {filteredProducts?.length > 0 ? (
+            {paginationProducts?.length > 0 ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
-                {filteredProducts.map((product) => (
+                {paginationProducts.map((product) => (
                   <ProductCard
                     key={product._id}
                     product={product}
@@ -109,7 +104,8 @@ const ProductsPage = () => {
               </div>
             )}
 
-            {(filteredProducts?.length > 0 || products?.length > 0) && (
+            {(paginationProducts?.length > 0 ||
+              filteredProducts?.length > 0) && (
               <div className="mx-auto rounded-3xl bg-bg-card p-4 w-fit shadow">
                 <Pagination
                   count={totalPages}

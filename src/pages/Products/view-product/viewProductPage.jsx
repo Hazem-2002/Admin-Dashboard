@@ -23,8 +23,8 @@ const ViewProductPage = () => {
   const { id } = useParams();
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     getProductDispatch(getProductByIdThunk(id));
-
     /* eslint-disable react-hooks/exhaustive-deps */
   }, []);
 
