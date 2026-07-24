@@ -5,12 +5,14 @@ import { updateOrderStatusThunk } from "./Thunks/UpdateOrderStatusThunk";
 const initialState = {
   orders: [],
   filteredOrders: [],
+  paginationOrders: [],
   filters: {
     method: "All Methods",
     payment: "All Payments",
     status: "All Statuses",
     input: "",
   },
+  limit: 10,
   count: 0,
   totalPages: 0,
   currentPage: 1,
@@ -45,6 +47,24 @@ const filterOrders = (orders = [], filters) => {
   return filteredOrders;
 };
 
+const ordersPaginationCalc = (orders, page, limit = 10) => {
+  const paginationOrders = [];
+
+  const startIndex = (page - 1) * limit;
+  const endIndex = startIndex + limit;
+
+  for (let i = startIndex; i < endIndex && i < orders.length; i++) {
+    paginationOrders.push(orders[i]);
+  }
+
+  return paginationOrders;
+};
+
+const pagesCount = (count, limit = 10) => {
+  return Math.ceil(count / limit);
+};
+
+// =================== SLICE ===================
 const ordersSlice = createSlice({
   name: "orders",
   initialState,
@@ -59,6 +79,22 @@ const ordersSlice = createSlice({
     setFiltersOrders(state, action) {
       state.filters = action.payload;
       state.filteredOrders = filterOrders(state.orders, state.filters);
+      state.paginationOrders = ordersPaginationCalc(
+        state.filteredOrders,
+        1,
+        state.limit,
+      );
+      state.currentPage = 1;
+      state.totalPages = pagesCount(state.filteredOrders.length, state.limit);
+    },
+
+    setPage(state, action) {
+      state.currentPage = action.payload;
+      state.paginationOrders = ordersPaginationCalc(
+        state.filteredOrders,
+        state.currentPage,
+        state.limit,
+      );
     },
   },
 
@@ -80,14 +116,15 @@ const ordersSlice = createSlice({
         state.error = null;
 
         state.orders = action.payload.orders;
-        state.filteredOrders = filterOrders(
-          action.payload.orders,
-          state.filters,
+        state.filteredOrders = filterOrders(state.orders, state.filters);
+        state.paginationOrders = ordersPaginationCalc(
+          state.filteredOrders,
+          state.currentPage,
+          state.limit,
         );
-
         state.count = action.payload.total;
-        state.totalPages = action.payload.totalPages;
-        state.currentPage = action.payload.currentPage;
+        state.limit = action.payload.ordersPerPage;
+        state.totalPages = pagesCount(state.filteredOrders.length, state.limit);
       })
       .addCase(getAllOrdersThunk.rejected, (state, action) => {
         state.loading = false;
@@ -117,6 +154,11 @@ const ordersSlice = createSlice({
         }
 
         state.filteredOrders = filterOrders(state.orders, state.filters);
+        state.paginationOrders = ordersPaginationCalc(
+          state.filteredOrders,
+          state.currentPage,
+          state.limit,
+        );
       })
       .addCase(updateOrderStatusThunk.rejected, (state, action) => {
         state.loading = false;
@@ -126,7 +168,7 @@ const ordersSlice = createSlice({
   },
 });
 
-export const { clearStatus, setFiltersOrders, resetFilteredOrders } =
+export const { clearStatus, setFiltersOrders, setPage, resetFilteredOrders } =
   ordersSlice.actions;
 
 export default ordersSlice.reducer;

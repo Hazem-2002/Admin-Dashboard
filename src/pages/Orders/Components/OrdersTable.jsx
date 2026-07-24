@@ -3,13 +3,13 @@ import { useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Avatar, Pagination, PaginationItem } from "@mui/material";
 import OrdersTableSkeleton from "./OrdersTableSkeleton";
-import { getAllOrdersThunk } from "../../../features/orders/Thunks/GetAllOrdersThunk";
 import OrderDetialsDrawer from "./OrderDetialsDrawer";
+import { setPage } from "../../../features/orders/orderSlice";
 
-const OrdersTable = ({ maxHeight, numberOfItems }) => {
-  const getOrdersDispatch = useDispatch();
-  const [isPagination, setIsPagination] = useState(false);
-  const { filteredOrders, totalPages, currentPage, loading } = useSelector(
+const OrdersTable = ({ maxHeight }) => {
+  const dispatch = useDispatch();
+  // const [isPagination, setIsPagination] = useState(false);
+  const { paginationOrders, totalPages, currentPage, loading } = useSelector(
     (store) => store.orders,
   );
 
@@ -17,17 +17,7 @@ const OrdersTable = ({ maxHeight, numberOfItems }) => {
   const [selectedOrder, setSelectedOrder] = useState({});
 
   const paginationHandler = (_, value) => {
-    const fetchOrders = async () => {
-      setIsPagination(true);
-      await getOrdersDispatch(
-        getAllOrdersThunk({
-          limit: numberOfItems * 2,
-          page: value,
-        }),
-      );
-      setIsPagination(false);
-    };
-    fetchOrders();
+    dispatch(setPage(value));
   };
 
   const orderClickHandler = (order) => {
@@ -45,7 +35,9 @@ const OrdersTable = ({ maxHeight, numberOfItems }) => {
         className="overflow-auto rounded-2xl border border-border shadow hide-scrollbar dark:border-secondary/30"
         style={{ maxHeight: maxHeight ? `${maxHeight}px` : "auto" }}
       >
-        {!loading ? (
+        {loading ? (
+          <OrdersTableSkeleton />
+        ) : (
           <table
             className={`min-w-[800px] xl:min-w-full w-full border-separate border-spacing-0`}
           >
@@ -73,8 +65,8 @@ const OrdersTable = ({ maxHeight, numberOfItems }) => {
             </thead>
 
             <tbody className="bg-secondary/1 dark:bg-bg-card">
-              {filteredOrders?.length > 0 ? (
-                filteredOrders?.map((order, index, array) => (
+              {paginationOrders?.length > 0 ? (
+                paginationOrders?.map((order, index, array) => (
                   <tr
                     key={order._id}
                     className="!h-[77px] hover:bg-secondary/3 transition cursor-pointer"
@@ -82,7 +74,7 @@ const OrdersTable = ({ maxHeight, numberOfItems }) => {
                   >
                     {/* Order */}
                     <td
-                      className={`py-4 px-6 ${
+                      className={`py-4 px-6 w-[15%] ${
                         index === array.length - 1 ? "" : "border-b"
                       } border-secondary/15 dark:border-secondary/20 text-[12px] text-secondary/85 uppercase font-semibold`}
                     >
@@ -91,7 +83,7 @@ const OrdersTable = ({ maxHeight, numberOfItems }) => {
 
                     {/* Customer */}
                     <td
-                      className={`py-4 px-6 ${
+                      className={`py-4 px-6 w-[25%] ${
                         index === array.length - 1 ? "" : "border-b"
                       } border-secondary/15 dark:border-secondary/20`}
                     >
@@ -121,7 +113,7 @@ const OrdersTable = ({ maxHeight, numberOfItems }) => {
 
                     {/* Date */}
                     <td
-                      className={`py-4 px-6 text-center text-[11px] text-secondary/90 ${
+                      className={`py-4 px-6 text-center w-[15%] text-[11px] text-secondary/90 ${
                         index === array.length - 1 ? "" : "border-b"
                       } border-secondary/15 dark:border-secondary/20`}
                     >
@@ -134,7 +126,7 @@ const OrdersTable = ({ maxHeight, numberOfItems }) => {
 
                     {/* Status */}
                     <td
-                      className={`py-4 px-6 text-center ${
+                      className={`py-4 px-6 text-center w-[15%] ${
                         index === array.length - 1 ? "" : "border-b"
                       } border-secondary/15 dark:border-secondary/20`}
                     >
@@ -163,7 +155,7 @@ const OrdersTable = ({ maxHeight, numberOfItems }) => {
 
                     {/* Payment */}
                     <td
-                      className={`py-4 px-6 text-center ${
+                      className={`py-4 px-6 text-center w-[15%] ${
                         index === array.length - 1 ? "" : "border-b"
                       } border-secondary/15 dark:border-secondary/20`}
                     >
@@ -197,7 +189,7 @@ const OrdersTable = ({ maxHeight, numberOfItems }) => {
 
                     {/* Total */}
                     <td
-                      className={`py-4 px-6 text-center text-[12px] font-bold text-text-primary/95 ${
+                      className={`py-4 px-6 text-center w-[15%] text-[12px] font-bold text-text-primary/95 ${
                         index === array.length - 1 ? "" : "border-b"
                       } border-secondary/15 dark:border-secondary/20`}
                     >
@@ -242,31 +234,6 @@ const OrdersTable = ({ maxHeight, numberOfItems }) => {
               </tr>
             </tfoot>
           </table>
-        ) : isPagination && loading ? (
-          <OrdersTableSkeleton numberOfItems={numberOfItems}>
-            <tfoot className="sticky bottom-0 z-10 !bg-bg-main">
-              <tr className="bg-secondary/8 dark:bg-secondary/16">
-                <td colSpan={6} className="py-2.5 px-6">
-                  <div className="flex justify-between items-center">
-                    <p className="text-xs text-text-primary/80">{`Page ${currentPage} of ${totalPages}`}</p>
-                    <Pagination
-                      count={totalPages}
-                      page={currentPage}
-                      onChange={paginationHandler}
-                      renderItem={(item) => (
-                        <PaginationItem
-                          {...item}
-                          className={`!rounded-lg !border !border-secondary/20 !text-text-primary/90  dark:!border-secondary/20 ${item.selected ? "!bg-primary/85 !text-white !border-primary hover:!bg-primary" : "hover:!bg-secondary/10"}`}
-                        />
-                      )}
-                    />
-                  </div>
-                </td>
-              </tr>
-            </tfoot>
-          </OrdersTableSkeleton>
-        ) : (
-          <OrdersTableSkeleton numberOfItems={numberOfItems} />
         )}
       </div>
       <OrderDetialsDrawer

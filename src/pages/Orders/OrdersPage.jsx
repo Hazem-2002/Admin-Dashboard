@@ -1,23 +1,21 @@
 import React from "react";
 import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { getAllOrdersThunk } from "../../features/orders/Thunks/GetAllOrdersThunk";
 import OrdersTable from "./Components/OrdersTable";
 import OrdersPageHeader from "./Components/OrdersPageHeader";
 
 const OrdersPage = () => {
   const getOrdersDispatch = useDispatch();
-  const { currentPage } = useSelector((store) => store.orders);
-
   const calcTableHeight = () => {
     const rowHeight = 77;
-    const headerHeight = 48;
+    const headerHeight = 56;
     const footerHeight = 52;
 
     const itemsCount =
       Math.floor(
         (screen.width < 768
-          ? screen.availHeight * 0.80
+          ? screen.availHeight * 0.8
           : screen.availHeight * 0.7) / rowHeight,
       ) - 1;
 
@@ -28,12 +26,7 @@ const OrdersPage = () => {
   };
 
   useEffect(() => {
-    getOrdersDispatch(
-      getAllOrdersThunk({
-        limit: calcTableHeight().itemsCount * 2,
-        page: currentPage,
-      }),
-    );
+    getOrdersDispatch(getAllOrdersThunk(calcTableHeight().itemsCount * 2));
     /* eslint-disable react-hooks/exhaustive-deps */
   }, []);
 
@@ -41,10 +34,7 @@ const OrdersPage = () => {
     <div className="flex flex-col gap-8 p-8">
       <OrdersPageHeader />
 
-      <OrdersTable
-        numberOfItems={calcTableHeight().itemsCount}
-        maxHeight={calcTableHeight().tableHeight}
-      />
+      <OrdersTable maxHeight={calcTableHeight().tableHeight} />
     </div>
   );
 };
