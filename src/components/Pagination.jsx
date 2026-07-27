@@ -11,6 +11,8 @@ const PaginationComponent = ({
       count={totalPages}
       page={currentPage}
       onChange={paginationHandler}
+      siblingCount={1}
+      boundaryCount={0}
       renderItem={(item) => (
         <PaginationItem
           {...item}
