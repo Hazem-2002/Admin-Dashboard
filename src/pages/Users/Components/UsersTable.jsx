@@ -11,14 +11,17 @@ import { editUserThunk } from "../../../features/users/Thunks/EditUserThunk";
 import { changeUserRoleThunk } from "../../../features/users/Thunks/ChangeUserRoleThunk";
 import { logout } from "../../../features/auth/authSlice.js";
 import { showToast } from "../../../features/Toast/toastSlice.js";
+import { setPage } from "../../../features/users/usersSlice";
 import ConfirmationDialog from "../dialogs/ConfirmationDialog.jsx";
 import EditUserDialog from "../dialogs/EditUserDialog";
-import Pagination from "./Pagination.jsx";
+import Pagination from "../../../components/Pagination.jsx";
 import UsersTableSkeleton from "./UsersTableSkeleton.jsx";
 
 const UsersTable = () => {
   const dispatch = useDispatch();
-  const { paginationUsers, loading } = useSelector((store) => store.users);
+  const { paginationUsers, loading, totalPages, currentPage } = useSelector(
+    (store) => store.users,
+  );
   const { email } = useSelector((store) => store.auth);
 
   // Confirmation Dialog Data
@@ -191,6 +194,10 @@ const UsersTable = () => {
     });
 
     setOpenConfirmationDialog(true);
+  };
+
+  const paginationHandler = (_, value) => {
+    dispatch(setPage(value));
   };
 
   return (
@@ -383,7 +390,15 @@ const UsersTable = () => {
         <tfoot className="!h-[52px] sticky bottom-0 z-10 !bg-bg-main">
           <tr className="dark:bg-secondary/15">
             <td colSpan={6} className="py-2.5 px-6">
-              <Pagination />
+              <div className="flex justify-between items-center">
+                <p className="text-xs text-text-primary/80">{`Page ${currentPage} of ${totalPages}`}</p>
+
+                <Pagination
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  paginationHandler={paginationHandler}
+                />
+              </div>
             </td>
           </tr>
         </tfoot>

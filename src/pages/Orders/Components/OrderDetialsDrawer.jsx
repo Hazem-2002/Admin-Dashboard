@@ -253,7 +253,7 @@ const OrderDetailsDrawer = ({ open, onClose, order }) => {
         <div className="flex flex-col gap-4 border border-secondary/15 rounded-md p-4">
           <Select
             id="category"
-            value={formData.status || order.status}
+            value={order.status}
             onChange={(e) => {
               setFormData({ ...formData, status: e.target.value });
             }}

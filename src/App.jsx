@@ -7,6 +7,15 @@ import { useEffect } from "react";
 // Layout
 const Layout = lazy(() => import("./Layout/Layout"));
 const ProtectedRoute = lazy(() => import("./Layout/ProtectedRoute"));
+
+const LoginPage = lazy(() => import("./pages/login/Login"));
+const ForgotPasswordPage = lazy(
+  () => import("./pages/login/ForgotPasswordPage"),
+);
+const VerifyResetOTPPage = lazy(
+  () => import("./pages/login/VerifyResetOTPPage"),
+);
+
 const DashboardPage = lazy(() => import("./pages/Home/DashboardPage"));
 const UsersPage = lazy(() => import("./pages/Users/UsersPage"));
 const ProductsPage = lazy(() => import("./pages/Products/ProductsPage"));
@@ -20,15 +29,8 @@ const ViewProductPage = lazy(
   () => import("./pages/Products/view-product/viewProductPage"),
 );
 const OrdersPage = lazy(() => import("./pages/Orders/OrdersPage"));
-const CartsPage = lazy(() => import("./pages/CartsPage"));
+const CartsPage = lazy(() => import("./pages/Carts/CartsPage"));
 const SettingsPage = lazy(() => import("./pages/SettingsPage"));
-const LoginPage = lazy(() => import("./pages/login/Login"));
-const ForgotPasswordPage = lazy(
-  () => import("./pages/login/ForgotPasswordPage"),
-);
-const VerifyResetOTPPage = lazy(
-  () => import("./pages/login/VerifyResetOTPPage"),
-);
 
 // Toast
 import Toast from "./toast/Toast";
@@ -47,22 +49,7 @@ function App() {
 
   return (
     <>
-      <Suspense
-        fallback={
-          <div
-            style={{
-              width: "100%",
-              height: "100vh",
-              backgroundColor: "red",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            Loading...
-          </div>
-        }
-      >
+      <Suspense>
         <Routes>
           <Route path="/login" element={<LoginPage />} />
           <Route path="/forgot-password" element={<ForgotPasswordPage />} />

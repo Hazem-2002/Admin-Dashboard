@@ -4,8 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { getProductsThunk } from "../../features/products/Thunks/getAllProductsThunk";
 import { setPage } from "../../features/products/productsSlice";
 import QuickEditProductDialog from "./quick-edit/QuickEditProduct";
-import { Pagination, PaginationItem } from "@mui/material";
-
+import Pagination from "../../components/Pagination";
 import ProductFilterSection from "./components/ProductFilterSection";
 import ProductCard from "./components/ProductCard";
 import ProductCardsSkeleton from "./components/ProductCardsSkeleton";
@@ -36,7 +35,7 @@ const ProductsPage = () => {
   // Fetch products from API and set state on mount
   useEffect(() => {
     try {
-      const productsPerPage = 2;
+      const productsPerPage = 4;
       dispatch(getProductsThunk(productsPerPage)).unwrap();
     } catch (error) {
       console.log(error);
@@ -106,18 +105,16 @@ const ProductsPage = () => {
 
             {(paginationProducts?.length > 0 ||
               filteredProducts?.length > 0) && (
-              <div className="mx-auto rounded-3xl bg-bg-card p-4 w-fit shadow">
-                <Pagination
-                  count={totalPages}
-                  page={currentPage}
-                  onChange={paginationHandler}
-                  renderItem={(item) => (
-                    <PaginationItem
-                      {...item}
-                      className={`!rounded-lg !border !border-secondary/20 !text-text-primary/90  dark:!border-secondary/20 ${item.selected ? "!bg-primary/85 !text-white !border-primary hover:!bg-primary" : "hover:!bg-secondary/10"}`}
-                    />
-                  )}
-                />
+              <div className="mx-auto rounded-3xl bg-bg-card p-4 w-fit sm:w-full shadow">
+                <div className="flex justify-between items-center">
+                  <p className="hidden sm:block text-xs text-text-primary/80">{`Page ${currentPage} of ${totalPages}`}</p>
+
+                  <Pagination
+                    totalPages={totalPages}
+                    currentPage={currentPage}
+                    paginationHandler={paginationHandler}
+                  />
+                </div>
               </div>
             )}
           </div>

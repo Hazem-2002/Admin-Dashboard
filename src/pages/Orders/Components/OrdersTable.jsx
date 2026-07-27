@@ -204,7 +204,7 @@ const OrdersTable = ({ maxHeight }) => {
                 <tr>
                   <td
                     colSpan={6}
-                    className="text-slate-500/90 dark:text-slate-400/75 text-center p-8"
+                    className="text-secondary/90 dark:text-secondary dark:text-slate-400/75 text-center p-16"
                   >
                     No orders found
                   </td>
@@ -212,27 +212,29 @@ const OrdersTable = ({ maxHeight }) => {
               )}
             </tbody>
 
-            <tfoot className="!h-[52px] sticky bottom-0 z-10 !bg-bg-main">
-              <tr className="bg-secondary/8 dark:bg-secondary/16">
-                <td colSpan={6} className="py-2.5 px-6">
-                  {/* {filteredOrders.length > 0 ? ( */}
-                  <div className="flex justify-between items-center">
-                    <p className="text-xs text-text-primary/80">{`Page ${currentPage} of ${totalPages}`}</p>
-                    <Pagination
-                      count={totalPages}
-                      page={currentPage}
-                      onChange={paginationHandler}
-                      renderItem={(item) => (
-                        <PaginationItem
-                          {...item}
-                          className={`!rounded-lg !border !border-secondary/20 !text-text-primary/90  dark:!border-secondary/20 ${item.selected ? "!bg-primary/85 !text-white !border-primary hover:!bg-primary" : "hover:!bg-secondary/10"}`}
-                        />
-                      )}
-                    />
-                  </div>
-                </td>
-              </tr>
-            </tfoot>
+            {paginationOrders.length > 0 && (
+              <tfoot className="!h-[52px] sticky bottom-0 z-10 !bg-bg-main">
+                <tr className="bg-secondary/8 dark:bg-secondary/16">
+                  <td colSpan={6} className="py-2.5 px-6">
+                    {/* {filteredOrders.length > 0 ? ( */}
+                    <div className="flex justify-between items-center">
+                      <p className="text-xs text-text-primary/80">{`Page ${currentPage} of ${totalPages}`}</p>
+                      <Pagination
+                        count={totalPages}
+                        page={currentPage}
+                        onChange={paginationHandler}
+                        renderItem={(item) => (
+                          <PaginationItem
+                            {...item}
+                            className={`!rounded-lg !border !border-secondary/20 !text-text-primary/90  dark:!border-secondary/20 ${item.selected ? "!bg-primary/85 !text-white !border-primary hover:!bg-primary" : "hover:!bg-secondary/10"}`}
+                          />
+                        )}
+                      />
+                    </div>
+                  </td>
+                </tr>
+              </tfoot>
+            )}
           </table>
         )}
       </div>
