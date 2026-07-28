@@ -17,7 +17,7 @@ const Layout = () => {
       <Sidebar open={open} handleDrawerToggle={handleDrawerToggle} />
 
       {/* Main Content */}
-      <div className="ml-0 lg:ml-54 xl:ml-72">
+      <div className="ml-0 lg:ml-54 xl:ml-68">
         {/* Header */}
         <Header handleDrawerToggle={handleDrawerToggle} />
 

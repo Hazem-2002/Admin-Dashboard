@@ -15,7 +15,7 @@ const Sidebar = ({ open, handleDrawerToggle }) => {
       slotProps={{
         paper: {
           className:
-            "!w-50 sm:!w-60 md:!w-70 lg:!w-54 xl:!w-72 !border-r-2 !border-border !bg-bg-sidebar",
+            "!w-50 sm:!w-60 md:!w-70 lg:!w-54 xl:!w-68 !border-r-2 !border-border !bg-bg-sidebar",
         },
       }}
     >
