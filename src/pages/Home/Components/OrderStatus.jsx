@@ -2,7 +2,7 @@ import React from "react";
 
 const OrderStatus = ({ data }) => {
   return (
-    <div className="sm:sticky left-0 top-24 flex flex-col gap-6 rounded-3xl p-6 border border-border bg-bg-card shadow">
+    <div className="md:sticky left-0 top-24 flex flex-col gap-6 rounded-3xl p-6 border border-border bg-bg-card shadow">
       {/* Header (Title && Subtitle && Updated badge) */}
       <div className="flex flex-col gap-2">
         {/* Title && Updated badge*/}

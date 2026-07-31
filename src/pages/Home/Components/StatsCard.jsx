@@ -38,7 +38,7 @@ const StatsCard = ({
             </div>
 
             <h3
-              className={`text-[15px] sm:text-[16px] font-bold text-text-primary tracking-[0.04rem] -mt-2`}
+              className={`text-[17px] sm:text-lg font-bold text-text-primary tracking-[0.04rem] -mt-2`}
             >
               {value}
             </h3>

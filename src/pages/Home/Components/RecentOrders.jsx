@@ -42,7 +42,7 @@ const RecentOrders = ({ data }) => {
 
             <div className="flex grow-0 items-center gap-4 max-sm:justify-between">
               <p
-                className={`inline-flex items-center rounded-full px-3 py-1 text-[10px] sm:text-xs font-semibold capitalize
+                className={`inline-flex items-center rounded-full px-2 sx:px-3 py-0.5 sm:py-1 text-[10px] sm:text-xs font-semibold capitalize
     ${
       order.status === "pending"
         ? "bg-amber-500/10 text-amber-300 border border-amber-500/20"
